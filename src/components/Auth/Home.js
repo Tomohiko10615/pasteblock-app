@@ -9,12 +9,6 @@ export default function Home(props) {
   const [nombre, setNombre] = useState("");
   const { userData } = useAuth();
 
-  const { navigation } = props;
-
-  const goToProfile = () => {
-    navigation.navigate("Profile");
-  };
-
   useEffect(() => {
     (async () => {
       if (userData != undefined) {

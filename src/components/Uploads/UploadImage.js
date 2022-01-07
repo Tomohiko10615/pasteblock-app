@@ -12,6 +12,13 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function UploadImage(props) {
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      props.someHandlerProp({ image });
+    })();
+  }, [image]);
+
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -22,9 +29,7 @@ export default function UploadImage(props) {
 
     if (!_image.cancelled) {
       setImage(_image.uri);
-      props.someHandlerProp({ image });
     }
-    console.log({ image });
   };
 
   return (
@@ -38,7 +43,7 @@ export default function UploadImage(props) {
           onPress={addImage}
           style={imageUploaderStyles.uploadBtn}
         >
-          <Text>{image ? "Edit" : "Upload"} Image</Text>
+          <Text>{image ? "Cambiar" : "Subir"} foto</Text>
           <AntDesign name="camera" size={20} color="black" />
         </TouchableOpacity>
       </View>

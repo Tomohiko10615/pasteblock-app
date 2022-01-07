@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { StyleSheet, TextInput, View, Text } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,10 +7,28 @@ import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [error, setError] = useState("");
-
+  const { navigation } = props;
   const { login } = useAuth();
+
+  useLayoutEffect(() => {
+    const stackNavigator = navigation.dangerouslyGetParent();
+    console.log(stackNavigator.dangerouslyGetParent());
+    if (stackNavigator) {
+      stackNavigator.setOptions({
+        tabBarVisible: false,
+        swipeEnabled: false,
+        gestureEnabled: false,
+      });
+      stackNavigator.dangerouslyGetParent().setOptions({
+        swipeEnabled: false,
+        gestureEnabled: false,
+      });
+    }
+  }, [navigation]);
+
+  console.log({ navigation });
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },

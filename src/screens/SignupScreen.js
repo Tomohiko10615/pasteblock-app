@@ -5,8 +5,17 @@ import useReg from "../hooks/useReg";
 import useAuth from "../hooks/useAuth";
 import BlockerDataForm from "../components/Signup/BlockerDataForm";
 
-export default function BlockerHome() {
+export default function BlockerHome(props) {
   const { reg } = useReg();
   const { auth } = useAuth();
-  return <View>{reg ? <BlockerDataForm /> : <SignupForm />}</View>;
+  const { navigation } = props;
+  return (
+    <View>
+      {reg ? (
+        <BlockerDataForm navigation={navigation} />
+      ) : (
+        <SignupForm navigation={navigation} />
+      )}
+    </View>
+  );
 }

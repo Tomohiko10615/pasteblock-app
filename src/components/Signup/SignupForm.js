@@ -4,9 +4,11 @@ import useReg from "../../hooks/useReg";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
+import useAuth from "../../hooks/useAuth";
 
 export default function SignupForm() {
   const { signUp } = useReg();
+  const { login } = useAuth();
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -41,6 +43,8 @@ export default function SignupForm() {
         console.log(result);
         if (result.id != null) {
           signUp(result.id);
+
+          login(true, formik.values.email);
           return result;
         }
       } catch (error) {

@@ -7,5 +7,13 @@ import useAuth from "../hooks/useAuth";
 export default function BlockerHome(props) {
   const { auth } = useAuth();
   const { navigation } = props;
-  return <View>{auth ? <Home navigation={navigation} /> : <LoginForm />}</View>;
+  return (
+    <View>
+      {auth ? (
+        <Home navigation={navigation} />
+      ) : (
+        <LoginForm navigation={navigation} />
+      )}
+    </View>
+  );
 }
