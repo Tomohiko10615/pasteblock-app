@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { StyleSheet, TextInput, View, Text } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,13 +6,22 @@ import useAuth from "../../hooks/useAuth";
 import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
+import { getAuthUserApi } from "../../api/User";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginForm(props) {
   const [error, setError] = useState("");
   const { navigation } = props;
   const { login } = useAuth();
+  //let navigation = useNavigation();
+  console.log(navigation);
 
   useLayoutEffect(() => {
+    navigation.setOptions({
+      tabBarVisible: false,
+      swipeEnabled: false,
+      gestureEnabled: false,
+    });
     const stackNavigator = navigation.dangerouslyGetParent();
     console.log(stackNavigator.dangerouslyGetParent());
     if (stackNavigator) {
@@ -21,14 +30,14 @@ export default function LoginForm(props) {
         swipeEnabled: false,
         gestureEnabled: false,
       });
-      stackNavigator.dangerouslyGetParent().setOptions({
-        swipeEnabled: false,
-        gestureEnabled: false,
-      });
     }
   }, [navigation]);
 
-  console.log({ navigation });
+  /*useEffect(() => {
+    (async () => {
+      await loadUserData();
+    })();
+  }, [login]);*/
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -46,17 +55,30 @@ export default function LoginForm(props) {
           }
         );
         const result = await response.json();
+
         if (result.success) {
-          login(result.success, result.email);
+          login(result.success, result.email, result.nombre);
         } else {
           setError("Email o contraseña incorrectos");
         }
+        console.log(result);
         return result;
       } catch (error) {
         throw error;
       }
     },
   });
+
+  /*
+  const loadUserData = async () => {
+    try {
+      const response = await getAuthUserApi({ userData }.userData);
+      setUserAuthData(response);
+      setNombre({ userAuthData }.userAuthData.nombre);
+    } catch (error) {
+      console.log(error);
+    }
+  };*/
 
   return (
     <View style={{ backgroundColor: "blue", height: "100%" }}>

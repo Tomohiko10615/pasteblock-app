@@ -9,9 +9,9 @@ import BlockerHome from "./src/screens/BlockerHome";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import SignupScreen from "./src/screens/SignupScreen";
 import SuccessScreen from "./src/screens/SuccessScreen";
-import useAuth from "./src/hooks/useAuth";
-import { Fragment } from "react";
+import LogoutScreen from "./src/screens/LogoutScreen";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,19 +20,19 @@ const Drawer = createDrawerNavigator();
 const NavigationDrawer = () => {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={BlockerHome} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      <Drawer.Screen name="Inicio" component={NavigationTab} />
+      <Drawer.Screen name="Mi perfil" component={ProfileScreen} />
+      <Drawer.Screen name="Cerrar sesión" component={LogoutScreen} />
     </Drawer.Navigator>
   );
 };
 
 const NavigationTab = () => {
-  const { auth } = useAuth();
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
-        component={NavigationDrawer}
+        component={BlockerHome}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
@@ -55,22 +55,33 @@ const NavigationTab = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AuthProvider>
-        <RegProvider>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              cardStyle: { backgroundColor: "white" },
-            }}
-          >
-            <Stack.Screen name="Home" component={NavigationTab} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Signup" component={SignupScreen} />
-            <Stack.Screen name="Success" component={SuccessScreen} />
-          </Stack.Navigator>
-        </RegProvider>
-      </AuthProvider>
-    </NavigationContainer>
+    <SafeAreaView style={styles.AndroidSafeArea}>
+      <NavigationContainer>
+        <AuthProvider>
+          <RegProvider>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                cardStyle: { backgroundColor: "white" },
+              }}
+            >
+              <Stack.Screen name="Home" component={NavigationDrawer} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="Signup" component={SignupScreen} />
+              <Stack.Screen name="Success" component={SuccessScreen} />
+              <Stack.Screen name="Logout" component={LogoutScreen} />
+            </Stack.Navigator>
+          </RegProvider>
+        </AuthProvider>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  AndroidSafeArea: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+});

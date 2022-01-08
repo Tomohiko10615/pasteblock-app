@@ -10,7 +10,7 @@ export default function Success(props) {
       <Header />
       <Text style={styles.text}>{successMessage}</Text>
       <Button
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Inicio")}
         title="Volver al inicio"
         backgroundColor="white"
         textColor="blue"

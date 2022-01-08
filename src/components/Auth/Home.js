@@ -1,34 +1,24 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useLayoutEffect, Fragment } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { getAuthUserApi } from "../../api/User";
 import useAuth from "../../hooks/useAuth";
 import Button from "../Button";
+import LoggedHeader from "../LoggedHeader";
 
 export default function Home(props) {
-  const [userAuthData, setUserAuthData] = useState({});
-  const [nombre, setNombre] = useState("");
-  const { userData } = useAuth();
+  const { nombre } = useAuth();
+  const { navigation } = props;
 
-  useEffect(() => {
-    (async () => {
-      if (userData != undefined) {
-        await loadUserData();
-      }
-    })();
-  }, [userData, nombre]);
-
-  const loadUserData = async () => {
-    try {
-      const response = await getAuthUserApi({ userData }.userData);
-      setUserAuthData(response);
-      setNombre({ userAuthData }.userAuthData.nombre);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: true,
+      swipeEnabled: true,
+      tabBarVisible: true,
+    });
+  }, []);
 
   return (
     <View>
+      <LoggedHeader />
       <Text style={styles.title}>Hola {nombre}</Text>
       <View style={styles.menu}>
         <Button backgroundColor="blue" textColor="white" title="Solicitudes" />
@@ -45,11 +35,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 28,
     fontWeight: "bold",
-    marginTop: 100,
+    marginTop: 40,
+    marginBottom: 40,
     color: "blue",
   },
   menu: {
-    height: "50%",
     justifyContent: "center",
   },
 });
