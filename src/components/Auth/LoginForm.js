@@ -3,27 +3,28 @@ import { StyleSheet, TextInput, View, Text } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
+import useLoading from "../../hooks/useLoading";
 import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
-import { getAuthUserApi } from "../../api/User";
-import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { AsyncStorageStatic } from "react-native";
 
 export default function LoginForm(props) {
   const [error, setError] = useState("");
-  const { navigation } = props;
   const { login } = useAuth();
-  //let navigation = useNavigation();
-  console.log(navigation);
+  //const { loading } = useLoading();
 
-  useLayoutEffect(() => {
+  //let navigation = useNavigation();
+
+  /*useEffect(() => {
     navigation.setOptions({
       tabBarVisible: false,
       swipeEnabled: false,
       gestureEnabled: false,
     });
     const stackNavigator = navigation.dangerouslyGetParent();
-    console.log(stackNavigator.dangerouslyGetParent());
+    //console.log(stackNavigator.dangerouslyGetParent());
     if (stackNavigator) {
       stackNavigator.setOptions({
         tabBarVisible: false,
@@ -31,7 +32,7 @@ export default function LoginForm(props) {
         gestureEnabled: false,
       });
     }
-  }, [navigation]);
+  }, [auth, navigation]);*/
 
   /*useEffect(() => {
     (async () => {
@@ -46,6 +47,8 @@ export default function LoginForm(props) {
 
     onSubmit: async () => {
       setError("");
+
+      //loading(true);
       try {
         const response = await fetch(
           "https://pasteblock.herokuapp.com/api/login",
@@ -61,6 +64,9 @@ export default function LoginForm(props) {
         } else {
           setError("Email o contraseña incorrectos");
         }
+
+        //loading(false);
+
         console.log(result);
         return result;
       } catch (error) {

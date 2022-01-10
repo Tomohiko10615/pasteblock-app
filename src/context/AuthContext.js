@@ -11,6 +11,7 @@ export function AuthProvider(props) {
   const [auth, setAuth] = useState(undefined);
   const [userData, setUserData] = useState(undefined);
   const [nombre, setNombre] = useState(undefined);
+  const [isLoggingOut, setIsLoggingOut] = useState(undefined);
 
   const login = (auth, userData, nombre) => {
     setAuth(auth);
@@ -18,16 +19,18 @@ export function AuthProvider(props) {
     setNombre(nombre);
   };
 
-  const logout = () => {
+  const logout = (isLoggingOut) => {
     setAuth(undefined);
     setUserData(undefined);
     setNombre(undefined);
+    setIsLoggingOut(isLoggingOut);
   };
 
   const valueContext = {
     auth,
     userData,
     nombre,
+    isLoggingOut,
     login,
     logout,
   };

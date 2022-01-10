@@ -9,8 +9,6 @@ export default function SuccessScreen(props) {
   const { auth } = useAuth();
   const { navigation } = props;
   const { successMessage } = props.route.params;
-  console.log(props);
-  console.log({ props });
   return (
     <View>
       <Success navigation={navigation} successMessage={successMessage} />
