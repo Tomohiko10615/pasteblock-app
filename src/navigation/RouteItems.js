@@ -7,6 +7,8 @@ export const screens = {
   Home: "Home",
   LogoutStack: "LogoutStack",
   Logout: "Logout",
+  LoginStack: "LoginStack",
+  Login: "Login",
   ProfileStack: "ProfileStack",
   Profile: "Profile",
 };
@@ -58,6 +60,27 @@ export const routes = [
     name: screens.Logout,
     focusedRoute: screens.Logout,
     title: "Cerrar sesión",
+    showInTab: false,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+  {
+    name: screens.LoginStack,
+    focusedRoute: screens.LoginStack,
+    title: "Iniciar sesión",
+    showInTab: false,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+
+  {
+    name: screens.Login,
+    focusedRoute: screens.Login,
+    title: "Iniciar sesión",
     showInTab: false,
     showInDrawer: false,
     icon: (focused) => (

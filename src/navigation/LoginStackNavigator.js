@@ -1,20 +1,20 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import BlockerHome from "../screens/BlockerHome";
+import LoginScreen from "../screens/LoginScreen";
 
 const Stack = createStackNavigator();
 
-const HomeStackNavigator = () => {
+const LoginStackNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={BlockerHome} />
+      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 };
 
-export default HomeStackNavigator;
+export default LoginStackNavigator;

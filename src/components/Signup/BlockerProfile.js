@@ -63,8 +63,10 @@ export default function BlockerProfile(props) {
         );
         const result = await response.json();
         if (result) {
+          signUp(undefined);
           navigation.navigate("Success", {
             successMessage: "Se ha registrado con éxito",
+            redirect: "Login",
           });
         }
         return result;

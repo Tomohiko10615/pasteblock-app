@@ -7,6 +7,7 @@ export default function LogoutScreen(props) {
   const { logout } = useAuth();
   const { navigation } = props;
   const successMessage = "Ha cerrado sesión con éxito";
+  const redirect = "Login";
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -15,11 +16,15 @@ export default function LogoutScreen(props) {
       gestureEnabled: false,
     });
     logout(true);
-  }, [navigation]);
+  }, []);
 
   return (
     <View>
-      <Success navigation={navigation} successMessage={successMessage} />
+      <Success
+        navigation={navigation}
+        successMessage={successMessage}
+        redirect={redirect}
+      />
     </View>
   );
 }

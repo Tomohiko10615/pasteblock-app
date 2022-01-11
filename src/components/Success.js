@@ -1,20 +1,25 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "./Header";
 import Button from "./Button";
 import useAuth from "../hooks/useAuth";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 
 export default function Success(props) {
-  const { navigation, successMessage } = props;
-  const { logout } = useAuth();
+  const { successMessage, redirect } = props;
+  const { logout, isLoggingOut } = useAuth();
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Header />
       <Text style={styles.text}>{successMessage}</Text>
       <Button
-        onPress={() => {
-          logout(false);
-        }}
+        onPress={
+          isLoggingOut
+            ? () => logout(false)
+            : () => navigation.navigate(redirect)
+        }
         title="Volver al inicio"
         backgroundColor="white"
         textColor="blue"

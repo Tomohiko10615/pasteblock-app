@@ -8,6 +8,7 @@ import ProfileStackNavigator from "./ProfileStackNavigator";
 import { routes, screens } from "./RouteItems";
 import Icon from "react-native-vector-icons/FontAwesome";
 import LogoutStackNavigator from "./LogoutStackNavigator";
+import LoginStackNavigator from "./LoginStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -59,6 +60,15 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name={screens.LogoutStack}
         component={LogoutStackNavigator}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="user" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={screens.LoginStack}
+        component={LoginStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="user" color={color} size={size} />

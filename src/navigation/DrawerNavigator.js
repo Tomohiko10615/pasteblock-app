@@ -4,11 +4,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeStackNavigator from "./HomeStackNavigator";
 import ProfileStackNavigator from "./ProfileStackNavigator";
 import BottomTabNavigator from "./BottomTabNavigator";
+import LoginStackNavigator from "./LoginStackNavigator";
 import LogoutStackNavigator from "./LogoutStackNavigator";
 
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import LogoutScreen from "../screens/LogoutScreen";
+import SuccessScreen from "../screens/SuccessScreen";
 
 import useAuth from "../hooks/useAuth";
 import { routes, screens } from "./RouteItems";
@@ -87,11 +89,29 @@ const DrawerNavigator = ({ nav }) => {
       ) : (
         <>
           {isLoggingOut ? (
-            <Drawer.Screen name={screens.Logout} component={LogoutScreen} />
+            <>
+              <Drawer.Screen
+                name={screens.Logout}
+                component={LogoutStackNavigator}
+              />
+            </>
           ) : (
             <>
-              <Drawer.Screen name="Login" component={LoginScreen} />
-              <Drawer.Screen name="Signup" component={SignupScreen} />
+              <Drawer.Screen
+                name={screens.LoginStack}
+                component={LoginStackNavigator}
+                options={{ swipeEnabled: false }}
+              />
+              <Drawer.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{ swipeEnabled: false }}
+              />
+              <Drawer.Screen
+                name="Success"
+                component={SuccessScreen}
+                options={{ swipeEnabled: false }}
+              />
             </>
           )}
         </>
