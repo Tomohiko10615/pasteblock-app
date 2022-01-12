@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 50,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 80,
     alignSelf: "center",
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 20,
   },
 });

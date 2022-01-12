@@ -7,7 +7,7 @@ import Checkbox from "expo-checkbox";
 import useReg from "../../hooks/useReg";
 
 export default function BlockerProfile(props) {
-  const { blockerId, navigation } = props;
+  const { blockerId, navigation, distritos } = props;
 
   const { signUp } = useReg();
 
@@ -22,6 +22,19 @@ export default function BlockerProfile(props) {
     isServ3,
     isServ4,
   ]);
+
+  const initialCheckedDistritos = [];
+  for (let item of distritos) {
+    item.checked = false;
+    initialCheckedDistritos.push(item.checked);
+  }
+
+  const [checkedDistritos, setCheckedDistritos] = useState(
+    initialCheckedDistritos
+  );
+
+  var tempCheckedDistritos = checkedDistritos;
+
   var blockerServicios = [];
 
   useEffect(() => {
@@ -29,6 +42,36 @@ export default function BlockerProfile(props) {
       setServicios([isServ1, isServ2, isServ3, isServ4]);
     })();
   }, [isServ1, isServ2, isServ3, isServ4]);
+
+  useEffect(() => {}, [checkedDistritos]);
+
+  const [render, rerender] = useState(false);
+
+  const getDistritos = (distritos) => {
+    let content = [];
+    for (let item of distritos) {
+      item.checked = false;
+      content.push(
+        <View style={styles.distritos}>
+          <Text style={styles.distrito} key={item.id}>
+            {item.nombre}
+          </Text>
+          <Checkbox
+            style={styles.distritoCheckbox}
+            value={checkedDistritos[item.id - 1]}
+            onValueChange={() => {
+              tempCheckedDistritos = checkedDistritos;
+              tempCheckedDistritos[item.id - 1] =
+                !checkedDistritos[item.id - 1];
+              setCheckedDistritos(tempCheckedDistritos);
+              rerender(!render);
+            }}
+          />
+        </View>
+      );
+    }
+    return content;
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -107,50 +150,50 @@ export default function BlockerProfile(props) {
         onChangeText={(text) => formik.setFieldValue("presentacion", text)}
       />
       <Text style={styles.title}>Servicios</Text>
-      <View style={styles.container}>
+      <View style={styles.serviciosContainer}>
         <View style={styles.container}>
-          <Text style={styles.label}>Albañilería</Text>
-          <Checkbox
-            style={styles.checkbox}
-            value={isServ1}
-            onValueChange={setServ1}
-          />
-        </View>
+          <View style={styles.elementContainer}>
+            <Text style={styles.label}>Albañilería</Text>
+            <Checkbox
+              style={styles.checkbox}
+              value={isServ1}
+              onValueChange={setServ1}
+            />
+          </View>
 
+          <View style={styles.elementContainer}>
+            <Text style={styles.label}>Pintura</Text>
+            <Checkbox
+              style={styles.checkbox}
+              value={isServ2}
+              onValueChange={setServ2}
+            />
+          </View>
+        </View>
         <View style={styles.container}>
-          <Text style={styles.label}>Pintura</Text>
-          <Checkbox
-            style={styles.checkbox}
-            value={isServ2}
-            onValueChange={setServ2}
-          />
+          <View style={styles.elementContainer}>
+            <Text style={styles.label}>Electricidad</Text>
+            <Checkbox
+              style={styles.checkbox}
+              value={isServ3}
+              onValueChange={setServ3}
+            />
+          </View>
+          <View style={styles.elementContainer}>
+            <Text style={styles.label}>Gasfitería</Text>
+            <Checkbox
+              style={styles.checkbox}
+              value={isServ4}
+              onValueChange={setServ4}
+            />
+          </View>
         </View>
       </View>
-      <View style={styles.container}>
-        <View style={styles.container}>
-          <Text style={styles.label}>Electricidad</Text>
-          <Checkbox
-            style={styles.checkbox}
-            value={isServ3}
-            onValueChange={setServ3}
-          />
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.label}>Gasfitería</Text>
-          <Checkbox
-            style={styles.checkbox}
-            value={isServ4}
-            onValueChange={setServ4}
-          />
-        </View>
-      </View>
 
-      <Button
-        title="Completar perfil"
-        onPress={formik.handleSubmit}
-        backgroundColor="white"
-        textColor="blue"
-      />
+      <Text style={styles.title}>Distritos</Text>
+      <View style={styles.distritosMainContainer}>
+        {getDistritos(distritos)}
+      </View>
       {formik.errors.presentacion ? (
         <Text style={styles.error}>{formik.errors.presentacion}</Text>
       ) : (
@@ -161,6 +204,12 @@ export default function BlockerProfile(props) {
       ) : (
         <Fragment></Fragment>
       )}
+      <Button
+        title="Completar perfil"
+        onPress={formik.handleSubmit}
+        backgroundColor="white"
+        textColor="blue"
+      />
     </Fragment>
   );
 }
@@ -184,29 +233,72 @@ const styles = StyleSheet.create({
     color: "black",
     textAlignVertical: "top",
   },
+  serviciosContainer: {
+    width: "80%",
+    alignSelf: "center",
+    flex: 1,
+  },
   container: {
     flexDirection: "row",
-    alignContent: "space-between",
-    alignSelf: "center",
     marginBottom: 5,
     marginRight: 5,
+    width: "80%",
+    alignSelf: "center",
+  },
+  elementContainer: {
+    flexDirection: "row",
+    marginBottom: 5,
+    marginRight: 25,
+    width: "40%",
+    flex: 1,
   },
   checkbox: {
     marginBottom: 15,
     backgroundColor: "white",
-    alignSelf: "center",
     color: "black",
+    alignSelf: "flex-end",
   },
   label: {
     marginBottom: 15,
-    alignSelf: "center",
     color: "white",
     marginRight: 5,
+    alignSelf: "flex-start",
+    width: "80%",
+    flex: 1,
+  },
+
+  distritosMainContainer: {
+    width: "90%",
+    alignSelf: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    flex: 1,
+    justifyContent: "center",
+    marginBottom: 15,
+  },
+
+  distritos: {
+    width: "45%",
+    alignSelf: "center",
+    flexDirection: "row",
+    marginRight: 5,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+
+  distrito: {
+    color: "white",
+    fontSize: 12,
+    width: "80%",
+  },
+  distritoCheckbox: {
+    alignSelf: "flex-end",
+    backgroundColor: "white",
   },
 
   error: {
     textAlign: "center",
-    marginTop: 10,
+    marginBottom: 15,
     color: "#f00",
   },
 });

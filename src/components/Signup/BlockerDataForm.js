@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { StyleSheet, TextInput, View, Text } from "react-native";
+import { StyleSheet, TextInput, View, Text, ScrollView } from "react-native";
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
@@ -8,11 +8,33 @@ import mime from "mime";
 import axios from "axios";
 import BlockerProfile from "./BlockerProfile";
 import useReg from "../../hooks/useReg";
+import Header from "../Header";
 
 export default function BlockerDataForm(props) {
   const [photoRoot, setPhotoRoot] = useState("");
   const { reg } = useReg();
   const [photo, setPhoto] = useState(true);
+  const [distritos, setDistritos] = useState({});
+
+  async function getDistritos() {
+    try {
+      const url = "https://pasteblock.herokuapp.com/api/distritos/";
+      const response = await fetch(url);
+      setDistritos(await response.json());
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      await getDistritos();
+    })();
+  }, []);
+
+  useEffect(() => {
+    console.log(distritos);
+  }, [distritos]);
 
   const handler = (root) => {
     setPhotoRoot(root);
@@ -38,7 +60,6 @@ export default function BlockerDataForm(props) {
       });
 
       const url = "https://pasteblock.herokuapp.com/api/blocker/form/" + reg;
-      //const url = "http://localhost:8080/api/blocker/form/8";
 
       try {
         const response = await fetch(url, {
@@ -64,20 +85,27 @@ export default function BlockerDataForm(props) {
   });
   return (
     <View style={{ backgroundColor: "blue", height: "100%" }}>
-      <Text style={styles.title}>Registro</Text>
-      {photo ? (
-        <Fragment>
-          <UploadImage someHandlerProp={handler} />
-          <Button
-            title="Subir foto"
-            onPress={formik.handleSubmit}
-            backgroundColor="white"
-            textColor="blue"
+      <Header />
+      <ScrollView>
+        <Text style={styles.title}>Registro</Text>
+        {photo ? (
+          <Fragment>
+            <UploadImage someHandlerProp={handler} />
+            <Button
+              title="Subir foto"
+              onPress={formik.handleSubmit}
+              backgroundColor="white"
+              textColor="blue"
+            />
+          </Fragment>
+        ) : (
+          <BlockerProfile
+            blockerId={reg}
+            distritos={distritos}
+            navigation={props.navigation}
           />
-        </Fragment>
-      ) : (
-        <BlockerProfile blockerId={reg} navigation={props.navigation} />
-      )}
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -91,7 +119,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 28,
     fontWeight: "bold",
-    marginTop: 45,
+    marginTop: 15,
     marginBottom: 15,
     color: "white",
   },

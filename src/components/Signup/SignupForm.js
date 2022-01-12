@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
-import { StyleSheet, TextInput, View, Text } from "react-native";
+import { StyleSheet, TextInput, View, Text, ScrollView } from "react-native";
 import useReg from "../../hooks/useReg";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
 import useAuth from "../../hooks/useAuth";
+import Header from "../Header";
 
 export default function SignupForm() {
   const { signUp } = useReg();
@@ -51,88 +52,91 @@ export default function SignupForm() {
   });
   return (
     <View style={{ backgroundColor: "blue", height: "100%" }}>
-      <Text style={styles.title}>Registro</Text>
-      <TextInput
-        placeholder="Nombre"
-        style={styles.input}
-        value={formik.values.nombre}
-        onChangeText={(text) => formik.setFieldValue("nombre", text)}
-      />
-      <TextInput
-        placeholder="Apellidos"
-        style={styles.input}
-        value={formik.values.apellido}
-        onChangeText={(text) => formik.setFieldValue("apellido", text)}
-      />
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        autoCapitalize="none"
-        value={formik.values.email}
-        onChangeText={(text) => formik.setFieldValue("email", text)}
-      />
-      <TextInput
-        placeholder="Celular"
-        style={styles.input}
-        autoCapitalize="none"
-        keyboardType="numeric"
-        value={formik.values.celular}
-        onChangeText={(text) => formik.setFieldValue("celular", text)}
-      />
-      <TextInput
-        placeholder="Contraseña"
-        style={styles.input}
-        autoCapitalize="none"
-        secureTextEntry={true}
-        value={formik.values.password}
-        onChangeText={(text) => formik.setFieldValue("password", text)}
-      />
-      <TextInput
-        placeholder="Confirmar contraseña"
-        style={styles.input}
-        autoCapitalize="none"
-        secureTextEntry={true}
-        value={formik.values.passwordConfirmation}
-        onChangeText={(text) =>
-          formik.setFieldValue("passwordConfirmation", text)
-        }
-      />
-      <Button
-        title="Registrarse"
-        onPress={formik.handleSubmit}
-        backgroundColor="white"
-        textColor="blue"
-      />
-      {formik.errors.nombre ? (
-        <Text style={styles.error}>{formik.errors.nombre}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
-      {formik.errors.apellido ? (
-        <Text style={styles.error}>{formik.errors.apellido}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
-      {formik.errors.email ? (
-        <Text style={styles.error}>{formik.errors.email}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
-      {formik.errors.celular ? (
-        <Text style={styles.error}>{formik.errors.celular}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
-      {formik.errors.password ? (
-        <Text style={styles.error}>{formik.errors.password}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
-      {formik.errors.passwordConfirmation ? (
-        <Text style={styles.error}>{formik.errors.passwordConfirmation}</Text>
-      ) : (
-        <Fragment></Fragment>
-      )}
+      <Header />
+      <ScrollView>
+        <Text style={styles.title}>Registro</Text>
+        <TextInput
+          placeholder="Nombre"
+          style={styles.input}
+          value={formik.values.nombre}
+          onChangeText={(text) => formik.setFieldValue("nombre", text)}
+        />
+        <TextInput
+          placeholder="Apellidos"
+          style={styles.input}
+          value={formik.values.apellido}
+          onChangeText={(text) => formik.setFieldValue("apellido", text)}
+        />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          autoCapitalize="none"
+          value={formik.values.email}
+          onChangeText={(text) => formik.setFieldValue("email", text)}
+        />
+        <TextInput
+          placeholder="Celular"
+          style={styles.input}
+          autoCapitalize="none"
+          keyboardType="numeric"
+          value={formik.values.celular}
+          onChangeText={(text) => formik.setFieldValue("celular", text)}
+        />
+        <TextInput
+          placeholder="Contraseña"
+          style={styles.input}
+          autoCapitalize="none"
+          secureTextEntry={true}
+          value={formik.values.password}
+          onChangeText={(text) => formik.setFieldValue("password", text)}
+        />
+        <TextInput
+          placeholder="Confirmar contraseña"
+          style={styles.input}
+          autoCapitalize="none"
+          secureTextEntry={true}
+          value={formik.values.passwordConfirmation}
+          onChangeText={(text) =>
+            formik.setFieldValue("passwordConfirmation", text)
+          }
+        />
+        <Button
+          title="Registrarse"
+          onPress={formik.handleSubmit}
+          backgroundColor="white"
+          textColor="blue"
+        />
+        {formik.errors.nombre ? (
+          <Text style={styles.error}>{formik.errors.nombre}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+        {formik.errors.apellido ? (
+          <Text style={styles.error}>{formik.errors.apellido}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+        {formik.errors.email ? (
+          <Text style={styles.error}>{formik.errors.email}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+        {formik.errors.celular ? (
+          <Text style={styles.error}>{formik.errors.celular}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+        {formik.errors.password ? (
+          <Text style={styles.error}>{formik.errors.password}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+        {formik.errors.passwordConfirmation ? (
+          <Text style={styles.error}>{formik.errors.passwordConfirmation}</Text>
+        ) : (
+          <Fragment></Fragment>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 28,
     fontWeight: "bold",
-    marginTop: 45,
+    marginTop: 15,
     marginBottom: 15,
     color: "white",
   },

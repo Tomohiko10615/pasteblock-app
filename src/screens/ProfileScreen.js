@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { SafeAreaView, Text, ScrollView, StyleSheet } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import useAuth from "../hooks/useAuth";
 import useLoading from "../hooks/useLoading";
@@ -13,6 +13,7 @@ export default function ProfileScreen() {
 
   const [blocker, setBlocker] = useState(undefined);
   const [distritos, setDistritos] = useState([]);
+  const [servicios, setServicios] = useState([]);
 
   async function getUserData() {
     try {
@@ -37,25 +38,37 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (blocker != undefined) {
       let distritosArray = [];
+      let serviciosArray = [];
       for (let i = 0; i < blocker.distritos.length; i++) {
         distritosArray.push(blocker.distritos[i].nombre);
       }
+      for (let i = 0; i < blocker.servicios.length; i++) {
+        serviciosArray.push(blocker.servicios[i].tipoServicio);
+      }
       setDistritos(distritosArray);
+      setServicios(serviciosArray);
     }
   }, [blocker]);
 
   return (
-    <View>
+    <SafeAreaView style={styles.scrollContainer}>
       <LoggedHeader />
-      {profileData && blocker && distritos ? (
-        <Profile
-          profileData={profileData}
-          blocker={blocker}
-          distritos={distritos}
-        />
-      ) : (
-        <Text>Cargando...</Text>
-      )}
-    </View>
+      <ScrollView>
+        {profileData && blocker && distritos && servicios ? (
+          <Profile
+            profileData={profileData}
+            blocker={blocker}
+            distritos={distritos}
+            servicios={servicios}
+          />
+        ) : (
+          <Text>Cargando...</Text>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContainer: { flex: 1 },
+});
