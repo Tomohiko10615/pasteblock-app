@@ -40,5 +40,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     height: "50%",
     fontSize: 25,
+    width: "80%",
+    alignSelf: "center",
   },
 });

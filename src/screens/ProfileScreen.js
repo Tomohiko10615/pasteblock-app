@@ -2,14 +2,16 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { SafeAreaView, Text, ScrollView, StyleSheet } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import useAuth from "../hooks/useAuth";
+import useReg from "../hooks/useReg";
 import useLoading from "../hooks/useLoading";
 import Profile from "../components/Profile";
+import EditProfile from "../components/EditProfile";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const { userData } = useAuth();
-  const { loading } = useLoading();
   const [profileData, setProfileData] = useState({});
-  const photoUrl = "";
+  const { edit, profileEdit } = useReg();
 
   const [blocker, setBlocker] = useState(undefined);
   const [distritos, setDistritos] = useState([]);
@@ -29,7 +31,7 @@ export default function ProfileScreen() {
     (async () => {
       await getUserData();
     })();
-  }, []);
+  }, [edit]);
 
   useEffect(() => {
     setBlocker(profileData.blocker);
@@ -55,12 +57,23 @@ export default function ProfileScreen() {
       <LoggedHeader />
       <ScrollView>
         {profileData && blocker && distritos && servicios ? (
-          <Profile
-            profileData={profileData}
-            blocker={blocker}
-            distritos={distritos}
-            servicios={servicios}
-          />
+          <>
+            {edit ? (
+              <EditProfile
+                profileData={profileData}
+                blocker={blocker}
+                distritos={distritos}
+                servicios={servicios}
+              />
+            ) : (
+              <Profile
+                profileData={profileData}
+                blocker={blocker}
+                distritos={distritos}
+                servicios={servicios}
+              />
+            )}
+          </>
         ) : (
           <Text>Cargando...</Text>
         )}

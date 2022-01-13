@@ -3,10 +3,12 @@ import { View, Text, StyleSheet } from "react-native";
 import useAuth from "../../hooks/useAuth";
 import Button from "../Button";
 import LoggedHeader from "../LoggedHeader";
+import useReg from "../../hooks/useReg";
 
 export default function Home(props) {
   const { nombre } = useAuth();
   const { navigation } = props;
+  const { profileEdit } = useReg();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -24,8 +26,24 @@ export default function Home(props) {
         <Button backgroundColor="blue" textColor="white" title="Solicitudes" />
         <Button backgroundColor="blue" textColor="white" title="Servicios" />
       </View>
-      <Button backgroundColor="blue" textColor="white" title="Mi perfil" />
-      <Button backgroundColor="blue" textColor="white" title="Editar perfil" />
+      <Button
+        backgroundColor="blue"
+        textColor="white"
+        title="Mi perfil"
+        onPress={() => {
+          profileEdit(false);
+          navigation.navigate("ProfileStack");
+        }}
+      />
+      <Button
+        backgroundColor="blue"
+        textColor="white"
+        title="Editar perfil"
+        onPress={() => {
+          profileEdit(true);
+          navigation.navigate("ProfileStack");
+        }}
+      />
     </View>
   );
 }

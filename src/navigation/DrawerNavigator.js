@@ -85,6 +85,11 @@ const DrawerNavigator = ({ nav }) => {
             name={screens.HomeTab}
             component={BottomTabNavigator}
           />
+          <Drawer.Screen
+            name="Success"
+            component={SuccessScreen}
+            options={{ swipeEnabled: false }}
+          />
         </>
       ) : (
         <>

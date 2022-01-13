@@ -8,9 +8,12 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
+import useReg from "../hooks/useReg";
+import Button from "./Button";
 
 export default function Profile(props) {
   const { profileData, blocker, distritos, servicios } = props;
+  const { profileEdit } = useReg();
 
   const hostUrl = "https://pasteblock.herokuapp.com/uploads/";
 
@@ -25,6 +28,7 @@ export default function Profile(props) {
           <Image
             style={styles.star}
             source={require("../../assets/star.png")}
+            key={i}
           />
         );
       } else if (currentStars < 0.75 && currentStars >= 0.25) {
@@ -32,6 +36,7 @@ export default function Profile(props) {
           <Image
             style={styles.star}
             source={require("../../assets/half-star.png")}
+            key={i}
           />
         );
       } else {
@@ -39,6 +44,7 @@ export default function Profile(props) {
           <Image
             style={styles.star}
             source={require("../../assets/no-star.png")}
+            key={i}
           />
         );
       }
@@ -100,6 +106,16 @@ export default function Profile(props) {
           </View>
         )}
         contentContainerStyle={styles.flatListContainer}
+      />
+      <Text style={styles.text}>Celular: {profileData.celular}</Text>
+
+      <Button
+        backgroundColor="white"
+        textColor="blue"
+        title="Editar perfil"
+        onPress={() => {
+          profileEdit(true);
+        }}
       />
     </View>
   );

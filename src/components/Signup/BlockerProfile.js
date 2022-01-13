@@ -33,9 +33,10 @@ export default function BlockerProfile(props) {
     initialCheckedDistritos
   );
 
-  var tempCheckedDistritos = checkedDistritos;
+  //var tempCheckedDistritos = checkedDistritos;
 
   var blockerServicios = [];
+  var blockerDistritos = [];
 
   useEffect(() => {
     (async () => {
@@ -43,29 +44,28 @@ export default function BlockerProfile(props) {
     })();
   }, [isServ1, isServ2, isServ3, isServ4]);
 
-  useEffect(() => {}, [checkedDistritos]);
+  //useEffect(() => {}, [checkedDistritos]);
 
   const [render, rerender] = useState(false);
 
   const getDistritos = (distritos) => {
     let content = [];
     for (let item of distritos) {
-      item.checked = false;
       content.push(
-        <View style={styles.distritos}>
-          <Text style={styles.distrito} key={item.id}>
+        <View style={styles.distritos} key={item.id + item.nombre}>
+          <Text style={styles.distrito} key={item.nombre}>
             {item.nombre}
           </Text>
           <Checkbox
             style={styles.distritoCheckbox}
             value={checkedDistritos[item.id - 1]}
             onValueChange={() => {
-              tempCheckedDistritos = checkedDistritos;
-              tempCheckedDistritos[item.id - 1] =
-                !checkedDistritos[item.id - 1];
-              setCheckedDistritos(tempCheckedDistritos);
+              checkedDistritos[item.id - 1] = !checkedDistritos[item.id - 1];
+              setCheckedDistritos(checkedDistritos);
               rerender(!render);
+              console.log(distritos);
             }}
+            key={item.id}
           />
         </View>
       );
@@ -88,11 +88,18 @@ export default function BlockerProfile(props) {
             blockerServicios.push({ id: i + 1 });
           }
         }
-        console.log(blockerServicios);
+        console.log(distritos);
+        for (let i = 0; i < distritos.length; i++) {
+          if (checkedDistritos[i]) {
+            blockerDistritos.push(distritos[i]);
+          }
+        }
+        console.log(blockerDistritos);
         const blocker = {
           id: blockerId,
           servicios: blockerServicios,
           presentacion: formik.values.presentacion,
+          distritos: blockerDistritos,
         };
         const response = await fetch(
           "https://pasteblock.herokuapp.com/api/blocker/form",

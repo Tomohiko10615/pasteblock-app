@@ -5,12 +5,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createStackNavigator();
 
-const Profile = () => (
-  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text>Profile screen!</Text>
-  </View>
-);
-
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator
