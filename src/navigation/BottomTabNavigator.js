@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeStackNavigator from "./HomeStackNavigator";
 import ProfileStackNavigator from "./ProfileStackNavigator";
+import MessageStackNavigator from "./MessageStackNavigator";
 
 import { routes, screens } from "./RouteItems";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -54,6 +55,15 @@ const BottomTabNavigator = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="user" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={screens.MessageStack}
+        component={MessageStackNavigator}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="inbox" color={color} size={size} />
           ),
         }}
       />

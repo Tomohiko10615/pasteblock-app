@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { StyleSheet, TextInput, View, Text } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
@@ -13,6 +19,7 @@ import { AsyncStorageStatic } from "react-native";
 export default function LoginForm(props) {
   const [error, setError] = useState("");
   const { login } = useAuth();
+  const [logging, setLogging] = useState(false);
   //const { loading } = useLoading();
 
   //let navigation = useNavigation();
@@ -46,9 +53,9 @@ export default function LoginForm(props) {
     validateOnChange: false,
 
     onSubmit: async () => {
+      setLogging(true);
       setError("");
 
-      //loading(true);
       try {
         const response = await fetch(
           "https://pasteblock.herokuapp.com/api/login",
@@ -58,16 +65,15 @@ export default function LoginForm(props) {
           }
         );
         const result = await response.json();
+        setLogging(false);
+        console.log(result);
 
         if (result.success) {
-          login(result.success, result.email, result.nombre);
+          login(result.success, result.email, result.nombre, result.context);
         } else {
           setError("Email o contraseña incorrectos");
         }
 
-        //loading(false);
-
-        console.log(result);
         return result;
       } catch (error) {
         throw error;
@@ -105,12 +111,17 @@ export default function LoginForm(props) {
         value={formik.values.password}
         onChangeText={(text) => formik.setFieldValue("password", text)}
       />
+
       <Button
         title="Iniciar sesión"
         onPress={formik.handleSubmit}
         backgroundColor="white"
         textColor="blue"
       />
+
+      <View style={styles.spinner}>
+        {logging ? <ActivityIndicator size="large" color="white" /> : <></>}
+      </View>
 
       <Text style={styles.error}>{formik.errors.email}</Text>
       <Text style={styles.error}>{formik.errors.password}</Text>
@@ -169,6 +180,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textDecorationLine: "underline",
   },
+  spinner: {},
   error: {
     textAlign: "center",
     marginTop: 20,

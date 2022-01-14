@@ -1,4 +1,9 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useState,
+  useLayoutEffect,
+} from "react";
 import { LogBox } from "react-native";
 import {
   View,
@@ -8,6 +13,7 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 
 import Checkbox from "expo-checkbox";
@@ -115,7 +121,7 @@ export default function EditProfile(props) {
     }
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       await getDistritos();
     })();
@@ -240,85 +246,115 @@ export default function EditProfile(props) {
             return !(isServ1 && isServ2 && isServ3 && isServ4);
           }
         ),
+      celular: Yup.string()
+        .required("Ingrese un número móvil")
+        .min(9, "Ingrese un número móvil válido")
+        .max(9, "Ingrese un número móvil válido"),
     };
   }
 
   return (
     <>
-      <View style={styles.photoContainer}>
-        <UploadImage someHandlerProp={handler} photoUri={imgUrl} />
-      </View>
-      <View style={styles.mainContainer}>
-        <Text style={styles.text}>Presentación:</Text>
-        <TextInput
-          placeholder="Presentacion"
-          style={styles.input}
-          value={formik.values.presentacion}
-          multiline
-          numberOfLines={5}
-          onChangeText={(text) => formik.setFieldValue("presentacion", text)}
-        />
-
-        <Text style={styles.text}>Servicios:</Text>
-        <View style={styles.serviciosContainer}>
-          <View style={styles.container}>
-            <View style={styles.elementContainer}>
-              <Text style={styles.label}>Albañilería</Text>
-              <Checkbox
-                style={styles.checkbox}
-                value={isServ1}
-                onValueChange={setServ1}
-              />
-            </View>
-
-            <View style={styles.elementContainer}>
-              <Text style={styles.label}>Pintura</Text>
-              <Checkbox
-                style={styles.checkbox}
-                value={isServ2}
-                onValueChange={setServ2}
-              />
-            </View>
+      {listaDistritos ? (
+        <>
+          <View style={styles.photoContainer}>
+            <UploadImage someHandlerProp={handler} photoUri={imgUrl} />
           </View>
-          <View style={styles.container}>
-            <View style={styles.elementContainer}>
-              <Text style={styles.label}>Electricidad</Text>
-              <Checkbox
-                style={styles.checkbox}
-                value={isServ3}
-                onValueChange={setServ3}
-              />
+          <View style={styles.mainContainer}>
+            <Text style={styles.text}>Presentación:</Text>
+            <TextInput
+              placeholder="Presentacion"
+              style={styles.input}
+              value={formik.values.presentacion}
+              multiline
+              numberOfLines={5}
+              onChangeText={(text) =>
+                formik.setFieldValue("presentacion", text)
+              }
+            />
+
+            <Text style={styles.text}>Servicios:</Text>
+            <View style={styles.serviciosContainer}>
+              <View style={styles.container}>
+                <View style={styles.elementContainer}>
+                  <Text style={styles.label}>Albañilería</Text>
+                  <Checkbox
+                    style={styles.checkbox}
+                    value={isServ1}
+                    onValueChange={setServ1}
+                  />
+                </View>
+
+                <View style={styles.elementContainer}>
+                  <Text style={styles.label}>Pintura</Text>
+                  <Checkbox
+                    style={styles.checkbox}
+                    value={isServ2}
+                    onValueChange={setServ2}
+                  />
+                </View>
+              </View>
+              <View style={styles.container}>
+                <View style={styles.elementContainer}>
+                  <Text style={styles.label}>Electricidad</Text>
+                  <Checkbox
+                    style={styles.checkbox}
+                    value={isServ3}
+                    onValueChange={setServ3}
+                  />
+                </View>
+                <View style={styles.elementContainer}>
+                  <Text style={styles.label}>Gasfitería</Text>
+                  <Checkbox
+                    style={styles.checkbox}
+                    value={isServ4}
+                    onValueChange={setServ4}
+                  />
+                </View>
+              </View>
             </View>
-            <View style={styles.elementContainer}>
-              <Text style={styles.label}>Gasfitería</Text>
-              <Checkbox
-                style={styles.checkbox}
-                value={isServ4}
-                onValueChange={setServ4}
-              />
+
+            <Text style={styles.text}>Distritos:</Text>
+            <View style={styles.distritosMainContainer}>
+              {getListaDistritos(listaDistritos)}
             </View>
+            <Text style={styles.text}>Celular:</Text>
+            <TextInput
+              style={styles.phoneInput}
+              value={formik.values.celular}
+              onChangeText={(text) => formik.setFieldValue("celular", text)}
+              keyboardType="numeric"
+            />
+
+            {formik.errors.presentacion ? (
+              <Text style={styles.error}>{formik.errors.presentacion}</Text>
+            ) : (
+              <></>
+            )}
+            {formik.errors.servicios ? (
+              <Text style={styles.error}>{formik.errors.servicios}</Text>
+            ) : (
+              <></>
+            )}
+
+            {formik.errors.celular ? (
+              <Text style={styles.error}>{formik.errors.celular}</Text>
+            ) : (
+              <></>
+            )}
+            <Button
+              title="Actualizar perfil"
+              onPress={formik.handleSubmit}
+              backgroundColor="white"
+              textColor="blue"
+            />
           </View>
+        </>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="blue" />
         </View>
-
-        <Text style={styles.text}>Distritos:</Text>
-        <View style={styles.distritosMainContainer}>
-          {getListaDistritos(listaDistritos)}
-        </View>
-        <Text style={styles.text}>Celular:</Text>
-        <TextInput
-          style={styles.phoneInput}
-          value={formik.values.celular}
-          onChangeText={(text) => formik.setFieldValue("celular", text)}
-          keyboardType="numeric"
-        />
-
-        <Button
-          title="Actualizar perfil"
-          onPress={formik.handleSubmit}
-          backgroundColor="white"
-          textColor="blue"
-        />
-      </View>
+      )}
     </>
   );
 }
@@ -458,5 +494,14 @@ const styles = StyleSheet.create({
   distritoCheckbox: {
     alignSelf: "flex-end",
     backgroundColor: "white",
+  },
+  error: {
+    textAlign: "center",
+    marginBottom: 10,
+    color: "#f00",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
   },
 });

@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { SafeAreaView, Text, ScrollView, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import useAuth from "../hooks/useAuth";
 import useReg from "../hooks/useReg";
 import useLoading from "../hooks/useLoading";
 import Profile from "../components/Profile";
 import EditProfile from "../components/EditProfile";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const { userData } = useAuth();
@@ -27,14 +38,22 @@ export default function ProfileScreen() {
     }
   }
 
+  const isFocused = useIsFocused();
+
   useLayoutEffect(() => {
-    (async () => {
-      await getUserData();
-    })();
-  }, [edit]);
+    if (isFocused == false) {
+      setProfileData(undefined);
+    } else {
+      (async () => {
+        await getUserData();
+      })();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
-    setBlocker(profileData.blocker);
+    if (profileData != undefined) {
+      setBlocker(profileData.blocker);
+    }
   }, [profileData]);
 
   useEffect(() => {
@@ -55,33 +74,39 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <LoggedHeader />
-      <ScrollView>
-        {profileData && blocker && distritos && servicios ? (
-          <>
-            {edit ? (
-              <EditProfile
-                profileData={profileData}
-                blocker={blocker}
-                distritos={distritos}
-                servicios={servicios}
-              />
-            ) : (
-              <Profile
-                profileData={profileData}
-                blocker={blocker}
-                distritos={distritos}
-                servicios={servicios}
-              />
-            )}
-          </>
-        ) : (
-          <Text>Cargando...</Text>
-        )}
-      </ScrollView>
+      {profileData && blocker && distritos && servicios ? (
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        >
+          {edit ? (
+            <EditProfile
+              profileData={profileData}
+              blocker={blocker}
+              distritos={distritos}
+              servicios={servicios}
+            />
+          ) : (
+            <Profile
+              profileData={profileData}
+              blocker={blocker}
+              distritos={distritos}
+              servicios={servicios}
+            />
+          )}
+        </ScrollView>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   scrollContainer: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
 });

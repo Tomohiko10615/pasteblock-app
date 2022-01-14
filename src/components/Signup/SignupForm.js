@@ -149,7 +149,7 @@ function validationSchema() {
       .email("El email no es válido")
       .required("Ingrese un email"),
     celular: Yup.string()
-      .required("Ingrese una contraseña")
+      .required("Ingrese un número móvil")
       .min(9, "Ingrese un número móvil válido")
       .max(9, "Ingrese un número móvil válido"),
     password: Yup.string()

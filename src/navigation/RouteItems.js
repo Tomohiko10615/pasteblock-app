@@ -11,6 +11,8 @@ export const screens = {
   Login: "Login",
   ProfileStack: "ProfileStack",
   Profile: "Profile",
+  MessageStack: "MessageStack",
+  Message: "Message",
 };
 
 export const routes = [
@@ -102,6 +104,27 @@ export const routes = [
     name: screens.Profile,
     focusedRoute: screens.ProfileStack,
     title: "Mi perfil",
+    showInTab: true,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+  {
+    name: screens.MessageStack,
+    focusedRoute: screens.MessageStack,
+    title: "Inbox",
+    showInTab: true,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+
+  {
+    name: screens.Message,
+    focusedRoute: screens.Message,
+    title: "Inbox",
     showInTab: true,
     showInDrawer: false,
     icon: (focused) => (
