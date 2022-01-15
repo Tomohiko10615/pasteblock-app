@@ -23,22 +23,47 @@ import {
 } from "@react-navigation/native";
 
 export default function MessageScreen() {
-  const [messageData, setMessageData] = useState(undefined);
+  const [messageData, setMessageData] = useState([]);
+  const [inicio, setInicio] = useState(0);
+  const [loaded, setLoaded] = useState(0);
+  const [endOfData, setEndOfData] = useState(false);
+  const [messageCondition, setMessageCondition] = useState(false);
+  const [messageItem, setMessageItem] = useState(undefined);
+
+  const showMessageCondition = (item) => {
+    setMessageCondition(true);
+    setMessageItem(item);
+    console.log("dsg");
+    console.log(item);
+  };
+
   const isFocused = useIsFocused();
 
-  async function getMessages() {
+  const getMessages = async () => {
     try {
-      const url = "https://pasteblock.herokuapp.com/api/blocker/inbox";
+      const url =
+        "https://pasteblock.herokuapp.com/api/blocker/inbox?inicio=" + inicio;
       const response = await fetch(url);
-      setMessageData(await response.json());
+      const result = await response.json();
+      if (result.length != 0) {
+        setMessageData([...messageData, ...result]);
+        setInicio(inicio + 3);
+      } else {
+        setEndOfData(true);
+      }
+      return result;
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   useLayoutEffect(() => {
     if (isFocused == false) {
-      setMessageData(undefined);
+      setMessageData([]);
+      setInicio(0);
+      setLoaded(undefined);
+      setEndOfData(false);
+      setMessageCondition(false);
     } else {
       (async () => {
         await getMessages();
@@ -46,24 +71,31 @@ export default function MessageScreen() {
     }
   }, [isFocused]);
 
-  /*useEffect(() => {
-    console.log(messageData);
-  }, [messageData]);*/
+  useEffect(() => {
+    if (messageData.length != 0) {
+      setLoaded(true);
+    }
+  }, [messageData]);
 
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <LoggedHeader />
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
-      >
-        {messageData ? (
-          <Inbox messageData={messageData} setMessageData={setMessageData} />
+      <View style={{ flexGrow: 1, justifyContent: "center" }}>
+        {loaded ? (
+          <Inbox
+            messageData={messageData}
+            getMessages={getMessages}
+            endOfData={endOfData}
+            showMessageCondition={showMessageCondition}
+            messageCondition={messageCondition}
+            messageItem={messageItem}
+          />
         ) : (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="blue" />
           </View>
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

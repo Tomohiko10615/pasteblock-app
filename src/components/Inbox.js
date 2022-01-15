@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Button from "./Button";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import MessageList from "./MessageList";
+import MessageCondition from "./MessageCondition";
 
 export default function Inbox(props) {
-  const { messageData, setMessageData } = props;
-  const [offset, setOffset] = useState(0);
+  const {
+    messageData,
+    getMessages,
+    endOfData,
+    showMessageCondition,
+    messageCondition,
+    messageItem,
+  } = props;
 
-  async function getMoreMessages(offset) {
+  /*async function getMoreMessages(offset) {
     try {
       const url =
         "https://pasteblock.herokuapp.com/api/blocker/inbox?inicio=" + offset;
@@ -16,9 +24,9 @@ export default function Inbox(props) {
     } catch (e) {
       console.log(e);
     }
-  }
+  }*/
 
-  const getListaMensajes = (messageData) => {
+  /*const getListaMensajes = (messageData) => {
     let content = [];
 
     let source = "";
@@ -70,14 +78,9 @@ export default function Inbox(props) {
       );
     }
     return content;
-  };
+  };*/
 
-  return (
-    <View style={styles.mainContainer}>
-      <View style={styles.secondaryContainer}>
-        <Text style={styles.secondaryText}>Solicitudes</Text>
-      </View>
-      <View>{getListaMensajes(messageData)}</View>
+  /*<View>{getListaMensajes(messageData)}</View>
       <Button
         title="Ver más mensajes"
         onPress={() => {
@@ -87,7 +90,25 @@ export default function Inbox(props) {
         backgroundColor="blue"
         textColor="white"
         style={styles.button}
-      />
+      />*/
+
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.secondaryContainer}>
+        <Text style={styles.secondaryText}>
+          {messageCondition ? <>Condiciones</> : <>Solicitudes</>}
+        </Text>
+      </View>
+      {messageCondition ? (
+        <MessageCondition messageItem={messageItem} />
+      ) : (
+        <MessageList
+          messages={messageData}
+          getMessages={getMessages}
+          endOfData={endOfData}
+          showMessageCondition={showMessageCondition}
+        />
+      )}
     </View>
   );
 }
