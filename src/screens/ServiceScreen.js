@@ -1,52 +1,30 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   SafeAreaView,
   View,
-  Text,
-  ScrollView,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import Inbox from "../components/Inbox";
-import useAuth from "../hooks/useAuth";
-import useReg from "../hooks/useReg";
-import {
-  useFocusEffect,
-  useNavigation,
-  useIsFocused,
-} from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function MessageScreen() {
-  const [messageData, setMessageData] = useState([]);
+export default function ServiceScreen() {
+  const isFocused = useIsFocused();
+  const [serviceData, setServiceData] = useState([]);
   const [inicio, setInicio] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [endOfData, setEndOfData] = useState(false);
-  const [messageCondition, setMessageCondition] = useState(false);
-  const [messageItem, setMessageItem] = useState(undefined);
 
-  const showMessageCondition = (item) => {
-    setMessageCondition(true);
-    setMessageItem(item);
-    console.log("dsg");
-    console.log(item);
-  };
-
-  const isFocused = useIsFocused();
-
-  const getMessages = async () => {
+  const getServices = async () => {
     try {
       const url =
-        "https://pasteblock.herokuapp.com/api/blocker/inbox?inicio=" + inicio;
+        "https://pasteblock.herokuapp.com/api/blocker/historial?inicio=" +
+        inicio;
       const response = await fetch(url);
       const result = await response.json();
       if (result.length != 0) {
-        setMessageData([...messageData, ...result]);
+        setServiceData([...serviceData, ...result]);
         setInicio(inicio + 3);
       } else {
         setEndOfData(true);
@@ -60,23 +38,22 @@ export default function MessageScreen() {
 
   useLayoutEffect(() => {
     if (isFocused == false) {
-      setMessageData([]);
+      setServiceData([]);
       setInicio(0);
       setLoaded(false);
       setEndOfData(false);
-      setMessageCondition(false);
     } else {
       (async () => {
-        await getMessages();
+        await getServices();
       })();
     }
   }, [isFocused]);
 
   useEffect(() => {
-    if (messageData.length != 0) {
+    if (serviceData.length != 0) {
       setLoaded(true);
     }
-  }, [messageData]);
+  }, [serviceData]);
 
   return (
     <SafeAreaView style={styles.scrollContainer}>

@@ -23,7 +23,14 @@ export default function Home(props) {
       <LoggedHeader />
       <Text style={styles.title}>Hola {nombre}</Text>
       <View style={styles.menu}>
-        <Button backgroundColor="blue" textColor="white" title="Solicitudes" />
+        <Button
+          backgroundColor="blue"
+          textColor="white"
+          title="Solicitudes"
+          onPress={() => {
+            navigation.navigate("MessageStack");
+          }}
+        />
         <Button backgroundColor="blue" textColor="white" title="Servicios" />
       </View>
       <Button

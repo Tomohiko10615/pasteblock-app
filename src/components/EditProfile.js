@@ -49,6 +49,8 @@ export default function EditProfile(props) {
 
   const [listaDistritos, setListaDistritos] = useState("");
 
+  const [render, rerender] = useState(false);
+
   useEffect(() => {
     console.log(distritos);
   }, [blocker]);
@@ -171,8 +173,6 @@ export default function EditProfile(props) {
     }
     return content;
   };
-
-  const [render, rerender] = useState(false);
 
   const formik = useFormik({
     initialValues: {

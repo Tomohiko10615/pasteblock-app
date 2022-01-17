@@ -33,6 +33,17 @@ export default function MessageList(props) {
               <ActivityIndicator size="large" color="blue" />
             </View>
           )}
+          {endOfData && messages.length != 0 && (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.text}>No existen más mensajes</Text>
+            </View>
+          )}
+
+          {endOfData && messages.length == 0 && (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.text}>No tienes ningún mensaje</Text>
+            </View>
+          )}
         </>
       }
     />
@@ -44,5 +55,9 @@ const styles = StyleSheet.create({
   loadingContainer: {
     justifyContent: "center",
     marginBottom: 15,
+  },
+  text: {
+    color: "blue",
+    textAlign: "center",
   },
 });
