@@ -13,6 +13,8 @@ export const screens = {
   Profile: "Profile",
   MessageStack: "MessageStack",
   Message: "Message",
+  ServiceStack: "ServiceStack",
+  Service: "Service",
 };
 
 export const routes = [
@@ -125,6 +127,27 @@ export const routes = [
     name: screens.Message,
     focusedRoute: screens.Message,
     title: "Inbox",
+    showInTab: true,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+  {
+    name: screens.ServiceStack,
+    focusedRoute: screens.ServiceStack,
+    title: "Servicios",
+    showInTab: true,
+    showInDrawer: false,
+    icon: (focused) => (
+      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+    ),
+  },
+
+  {
+    name: screens.Service,
+    focusedRoute: screens.Service,
+    title: "Servicios",
     showInTab: true,
     showInDrawer: false,
     icon: (focused) => (

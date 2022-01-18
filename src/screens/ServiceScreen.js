@@ -6,8 +6,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
-import Inbox from "../components/Inbox";
 import { useIsFocused } from "@react-navigation/native";
+import Service from "../components/Service";
 
 export default function ServiceScreen() {
   const isFocused = useIsFocused();
@@ -15,6 +15,14 @@ export default function ServiceScreen() {
   const [inicio, setInicio] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [endOfData, setEndOfData] = useState(false);
+  const [serviceDetails, setServiceDetails] = useState(false);
+  const [serviceItem, setServiceItem] = useState(undefined);
+
+  const showServiceDetails = (item) => {
+    setServiceDetails(true);
+    setServiceItem(item);
+    console.log(item);
+  };
 
   const getServices = async () => {
     try {
@@ -60,13 +68,13 @@ export default function ServiceScreen() {
       <LoggedHeader />
       <View style={{ flexGrow: 1, justifyContent: "center" }}>
         {loaded ? (
-          <Inbox
-            messageData={messageData}
-            getMessages={getMessages}
+          <Service
+            serviceData={serviceData}
+            getServices={getServices}
             endOfData={endOfData}
-            showMessageCondition={showMessageCondition}
-            messageCondition={messageCondition}
-            messageItem={messageItem}
+            showServiceDetails={showServiceDetails}
+            serviceDetails={serviceDetails}
+            serviceItem={serviceItem}
           />
         ) : (
           <View style={styles.loadingContainer}>

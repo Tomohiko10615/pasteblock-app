@@ -1,5 +1,11 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { StyleSheet, TextInput, View, Text } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
@@ -10,6 +16,8 @@ export default function BlockerProfile(props) {
   const { blockerId, navigation, distritos } = props;
 
   const { signUp } = useReg();
+
+  const [loading, setLoading] = useState(false);
 
   const [isServ1, setServ1] = useState(false);
   const [isServ2, setServ2] = useState(false);
@@ -82,6 +90,7 @@ export default function BlockerProfile(props) {
     validateOnChange: false,
 
     onSubmit: async () => {
+      setLoading(true);
       try {
         for (let i = 0; i < servicios.length; i++) {
           if (servicios[i]) {
@@ -112,6 +121,7 @@ export default function BlockerProfile(props) {
           }
         );
         const result = await response.json();
+        setLoading(false);
         if (result) {
           signUp(undefined);
           navigation.navigate("Success", {
@@ -211,6 +221,9 @@ export default function BlockerProfile(props) {
       ) : (
         <Fragment></Fragment>
       )}
+      <View style={styles.spinner}>
+        {loading && <ActivityIndicator size="large" color="white" />}
+      </View>
       <Button
         title="Completar perfil"
         onPress={formik.handleSubmit}
@@ -307,5 +320,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 15,
     color: "#f00",
+  },
+  spinner: {
+    marginBottom: 15,
   },
 });

@@ -1,14 +1,21 @@
-import React, { Fragment } from "react";
-import { StyleSheet, TextInput, View, Text, ScrollView } from "react-native";
+import React, { Fragment, useState } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import useReg from "../../hooks/useReg";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
-import useAuth from "../../hooks/useAuth";
 import Header from "../Header";
 
 export default function SignupForm() {
   const { signUp } = useReg();
+  const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -22,6 +29,7 @@ export default function SignupForm() {
     validateOnChange: false,
 
     onSubmit: async () => {
+      setLoading(true);
       delete formik.values["passwordConfirmation"];
 
       const newUser = formik.values;
@@ -40,6 +48,7 @@ export default function SignupForm() {
           }
         );
         const result = await response.json();
+        setLoading(false);
         console.log(result);
         if (result.id != null) {
           signUp(result.id);
@@ -100,12 +109,16 @@ export default function SignupForm() {
             formik.setFieldValue("passwordConfirmation", text)
           }
         />
+        <View style={styles.spinner}>
+          {loading && <ActivityIndicator size="large" color="white" />}
+        </View>
         <Button
           title="Registrarse"
           onPress={formik.handleSubmit}
           backgroundColor="white"
           textColor="blue"
         />
+
         {formik.errors.nombre ? (
           <Text style={styles.error}>{formik.errors.nombre}</Text>
         ) : (
@@ -193,5 +206,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     color: "#f00",
+  },
+  spinner: {
+    marginBottom: 15,
   },
 });

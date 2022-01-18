@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import useReg from "../hooks/useReg";
 import Button from "./Button";
+import { getStars } from "../utils/Stars";
 
 export default function Profile(props) {
   const { profileData, blocker, distritos, servicios } = props;
@@ -18,40 +19,6 @@ export default function Profile(props) {
   const hostUrl = "https://pasteblock.herokuapp.com/uploads/";
 
   const imgUrl = hostUrl + blocker.foto;
-
-  const getStars = (stars) => {
-    let content = [];
-    let currentStars = stars;
-    for (let i = 0; i < 5; i++) {
-      if (currentStars >= 0.75) {
-        content.push(
-          <Image
-            style={styles.star}
-            source={require("../../assets/star.png")}
-            key={i}
-          />
-        );
-      } else if (currentStars < 0.75 && currentStars >= 0.25) {
-        content.push(
-          <Image
-            style={styles.star}
-            source={require("../../assets/half-star.png")}
-            key={i}
-          />
-        );
-      } else {
-        content.push(
-          <Image
-            style={styles.star}
-            source={require("../../assets/no-star.png")}
-            key={i}
-          />
-        );
-      }
-      currentStars--;
-    }
-    return content;
-  };
 
   useEffect(() => {
     console.log(servicios);
@@ -177,9 +144,5 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: "hidden",
     margin: 15,
-  },
-  star: {
-    width: 30,
-    height: 30,
   },
 });

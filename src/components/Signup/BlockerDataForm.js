@@ -1,5 +1,12 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { StyleSheet, TextInput, View, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
@@ -15,6 +22,7 @@ export default function BlockerDataForm(props) {
   const { reg } = useReg();
   const [photo, setPhoto] = useState(true);
   const [distritos, setDistritos] = useState({});
+  const [loading, setLoading] = useState(false);
 
   async function getDistritos() {
     try {
@@ -48,6 +56,9 @@ export default function BlockerDataForm(props) {
     validateOnChange: false,
 
     onSubmit: async () => {
+      setLoading(true);
+      console.log("afdg");
+      console.log(photoRoot);
       let formData = new FormData();
 
       formData.append("file", {
@@ -58,7 +69,7 @@ export default function BlockerDataForm(props) {
         name: photoRoot.image.split("/").pop(),
         type: mime.getType(photoRoot.image),
       });
-
+      console.log(formData);
       const url = "https://pasteblock.herokuapp.com/api/blocker/form/" + reg;
 
       try {
@@ -66,12 +77,14 @@ export default function BlockerDataForm(props) {
           method: "POST",
           body: formData,
           headers: {
+            Accept: "application/json",
             "Content-Type": "multipart/form-data",
           },
         });
 
         //const response = await axios.post(url, formData);
         const result = await response.json();
+        setLoading(false);
         console.log(result);
         if (result) {
           setPhoto(false);
@@ -84,13 +97,25 @@ export default function BlockerDataForm(props) {
     },
   });
   return (
-    <View style={{ backgroundColor: "blue", height: "100%" }}>
+    <View
+      style={{
+        backgroundColor: "blue",
+        height: "100%",
+      }}
+    >
       <Header />
-      <ScrollView>
+      <ScrollView
+        style={{
+          paddingBottom: 15,
+        }}
+      >
         <Text style={styles.title}>Registro</Text>
         {photo ? (
           <Fragment>
             <UploadImage someHandlerProp={handler} />
+            <View style={styles.spinner}>
+              {loading && <ActivityIndicator size="large" color="white" />}
+            </View>
             <Button
               title="Subir foto"
               onPress={formik.handleSubmit}
@@ -142,5 +167,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     color: "#f00",
+  },
+  spinner: {
+    marginBottom: 15,
   },
 });
