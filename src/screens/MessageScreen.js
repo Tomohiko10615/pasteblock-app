@@ -1,26 +1,14 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   SafeAreaView,
   View,
   Text,
-  ScrollView,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import Inbox from "../components/Inbox";
-import useAuth from "../hooks/useAuth";
-import useReg from "../hooks/useReg";
-import {
-  useFocusEffect,
-  useNavigation,
-  useIsFocused,
-} from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 export default function MessageScreen() {
   const [messageData, setMessageData] = useState([]);
@@ -33,8 +21,6 @@ export default function MessageScreen() {
   const showMessageCondition = (item) => {
     setMessageCondition(true);
     setMessageItem(item);
-    console.log("dsg");
-    console.log(item);
   };
 
   const isFocused = useIsFocused();

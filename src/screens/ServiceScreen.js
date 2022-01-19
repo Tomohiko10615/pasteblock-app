@@ -15,11 +15,11 @@ export default function ServiceScreen() {
   const [inicio, setInicio] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [endOfData, setEndOfData] = useState(false);
-  const [serviceDetails, setServiceDetails] = useState(false);
+  const [serviceDetails, setServiceDetails] = useState(undefined);
   const [serviceItem, setServiceItem] = useState(undefined);
 
-  const showServiceDetails = (item) => {
-    setServiceDetails(true);
+  const showServiceDetails = (item, state) => {
+    setServiceDetails(state);
     setServiceItem(item);
     console.log(item);
   };
@@ -50,6 +50,7 @@ export default function ServiceScreen() {
       setInicio(0);
       setLoaded(false);
       setEndOfData(false);
+      showServiceDetails(undefined, undefined);
     } else {
       (async () => {
         await getServices();

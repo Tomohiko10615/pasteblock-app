@@ -17,11 +17,14 @@ export default function Service(props) {
     <View style={styles.mainContainer}>
       <View style={styles.secondaryContainer}>
         <Text style={styles.secondaryText}>
-          {serviceDetails ? <>Servicio</> : <>Solicitudes</>}
+          {serviceDetails ? <>Servicio</> : <>Servicios</>}
         </Text>
       </View>
       {serviceDetails ? (
-        <ServiceDetails serviceItem={serviceItem} />
+        <ServiceDetails
+          serviceItem={serviceItem}
+          serviceDetails={serviceDetails}
+        />
       ) : (
         <ServiceList
           services={serviceData}
