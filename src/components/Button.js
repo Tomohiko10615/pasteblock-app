@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: "60%",
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 15,
   },
 
   text: {
@@ -37,5 +37,6 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: "bold",
     letterSpacing: 0.25,
+    textAlign: "center",
   },
 });

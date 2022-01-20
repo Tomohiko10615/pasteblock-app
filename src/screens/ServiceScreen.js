@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import LoggedHeader from "../components/LoggedHeader";
 import { useIsFocused } from "@react-navigation/native";
+
 import Service from "../components/Service";
 
 export default function ServiceScreen() {
@@ -17,6 +18,9 @@ export default function ServiceScreen() {
   const [endOfData, setEndOfData] = useState(false);
   const [serviceDetails, setServiceDetails] = useState(undefined);
   const [serviceItem, setServiceItem] = useState(undefined);
+  const [finalizado, setFinalizado] = useState(false);
+
+  const [render, setRender] = useState(false);
 
   const showServiceDetails = (item, state) => {
     setServiceDetails(state);
@@ -24,25 +28,45 @@ export default function ServiceScreen() {
     console.log(item);
   };
 
+  useEffect(() => {
+    (async () => {
+      setServiceData([]);
+      setInicio(0);
+      setEndOfData(false);
+      setLoaded(false);
+      setRender(!render);
+    })();
+  }, [finalizado]);
+
   const getServices = async () => {
     try {
       const url =
         "https://pasteblock.herokuapp.com/api/blocker/historial?inicio=" +
-        inicio;
+        inicio +
+        "&finalizado=" +
+        finalizado;
       const response = await fetch(url);
       const result = await response.json();
+      console.log(inicio);
       if (result.length != 0) {
         setServiceData([...serviceData, ...result]);
-        setInicio(inicio + 3);
+        setInicio(inicio + 5);
       } else {
         setEndOfData(true);
       }
       setLoaded(true);
+      console.log(finalizado);
       return result;
     } catch (e) {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    if (serviceData.length != 0) {
+      setLoaded(true);
+    }
+  }, [serviceData]);
 
   useLayoutEffect(() => {
     if (isFocused == false) {
@@ -51,18 +75,13 @@ export default function ServiceScreen() {
       setLoaded(false);
       setEndOfData(false);
       showServiceDetails(undefined, undefined);
+      setFinalizado(false);
     } else {
       (async () => {
         await getServices();
       })();
     }
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (serviceData.length != 0) {
-      setLoaded(true);
-    }
-  }, [serviceData]);
+  }, [isFocused, render]);
 
   return (
     <SafeAreaView style={styles.scrollContainer}>
@@ -76,6 +95,8 @@ export default function ServiceScreen() {
             showServiceDetails={showServiceDetails}
             serviceDetails={serviceDetails}
             serviceItem={serviceItem}
+            finalizado={finalizado}
+            setFinalizado={setFinalizado}
           />
         ) : (
           <View style={styles.loadingContainer}>

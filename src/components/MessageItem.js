@@ -58,7 +58,7 @@ export default function MessageItem(props) {
     default:
       switch (item.estadoConfirmacionBlocker) {
         case true:
-          status = "En espera de confirmación";
+          status = "En espera";
           backgroundColor = "orange";
           break;
         case false:
@@ -123,6 +123,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
   },
+  messageDataContainer: {
+    alignItems: "flex-start",
+  },
   messageDataText: {
     color: "white",
     marginBottom: 10,
@@ -151,7 +154,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 10,
     alignSelf: "center",
-    width: "100%",
   },
   secondaryText: {
     textAlign: "center",
@@ -159,5 +161,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     fontSize: 16,
     marginHorizontal: 5,
+    width: 120,
   },
 });

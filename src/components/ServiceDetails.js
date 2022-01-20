@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RadioButtons, SegmentedControls } from "react-native-radio-buttons";
 import Button from "./Button";
+import { getStars } from "../utils/Stars";
 
 export default function ServiceDetails(props) {
   const { serviceItem, serviceDetails } = props;
@@ -24,6 +25,8 @@ export default function ServiceDetails(props) {
 
   const [state, setState] = useState({ selectedOption: "Ninguna" });
   const [stars, setStars] = useState(0);
+
+  const [showForm, setShowForm] = useState(false);
 
   const navigation = useNavigation();
 
@@ -53,23 +56,43 @@ export default function ServiceDetails(props) {
         "¡Haz dado por finalizado tus labores. Por favor deja una calificación al usuario!";
       successMessage = "Calificación enviada con éxito";
       break;
-    case "cancelar":
+    case "reportar":
       infoText =
         "Antes de proceder, por favor comunícate con el usuario para resolver cualquier desacuerdo. Si aún deseas proceder, especifica los motivos del problema.";
+      successMessage = "Calificación enviada con éxito";
       break;
     case "ver":
       infoText = "";
       break;
     case "editar":
       infoText = "";
+      successMessage = "Calificación enviada con éxito";
+
       break;
     default:
       break;
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (serviceDetails == "culminar") {
       setEstadoBlocker(true);
+    } else if (serviceDetails == "reportar") {
+      setEstadoBlocker(false);
+    } else if (serviceDetails == "editar") {
+      setEstadoBlocker(serviceItem.culminacionBlocker);
+      setSelectedStars(serviceItem.calificacionCliente);
+      setActualizar(true);
+      if (options.includes(serviceItem.observacionesBlocker)) {
+        setSelectedOption(serviceItem.observacionesBlocker);
+      } else if (serviceItem.observacionesBlocker == "") {
+        setSelectedOption("Ninguna");
+      } else {
+        setSelectedOption("Otros");
+      }
+    }
+
+    if (serviceDetails != "ver") {
+      setShowForm(true);
     }
   }, []);
 
@@ -95,7 +118,10 @@ export default function ServiceDetails(props) {
   }
 
   const formik = useFormik({
-    initialValues: {},
+    initialValues: {
+      comentarioBlocker: serviceItem.comentarioBlocker,
+      observacionesBlocker: serviceItem.observacionesBlocker,
+    },
     validationSchema: Yup.object(validationSchema()),
     validateOnChange: false,
 
@@ -114,14 +140,12 @@ export default function ServiceDetails(props) {
           observacionesBlocker: observacionesBlocker,
         };
 
-        console.log(JSON.stringify(contratoActualizado));
-
         const url =
           "https://pasteblock.herokuapp.com/api/contrato?" +
           "estadoBlocker=" +
-          estadoBlocker;
-
-        console.log(url);
+          estadoBlocker +
+          "&actualizar=" +
+          actualizar;
 
         const response = await fetch(url, {
           method: "POST",
@@ -132,7 +156,6 @@ export default function ServiceDetails(props) {
         });
         const result = await response;
         setPosting(false);
-        console.log(result);
         if (result) {
           navigation.navigate("Success", {
             successMessage: successMessage,
@@ -159,78 +182,10 @@ export default function ServiceDetails(props) {
     };
   }
 
-  /*<Text style={styles.messageDataText}>Detalles:</Text>
-        <View style={styles.secondaryContainer}>
-          <Text style={styles.secondaryText}>{messageItem.mensajeCliente}</Text>
-        </View>
-        <Text style={styles.messageDataText}>Respuesta:</Text>
-        <TextInput
-          placeholder="Escribe una respuesta."
-          style={styles.multilineInput}
-          value={formik.values.mensajeBlocker}
-          multiline
-          numberOfLines={5}
-          onChangeText={(text) => formik.setFieldValue("mensajeBlocker", text)}
-        />
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.inputDataText}>Tiempo estimado:</Text>
-          <TextInput
-            placeholder=""
-            style={styles.input}
-            value={formik.values.tiempoEstimado}
-            onChangeText={(text) =>
-              formik.setFieldValue("tiempoEstimado", text)
-            }
-            keyboardType="numeric"
-          />
-        </View>
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.inputDataText}>Costo estimado:</Text>
-          <TextInput
-            placeholder=""
-            style={styles.input}
-            value={formik.values.costo}
-            onChangeText={(text) => formik.setFieldValue("costo", text)}
-            keyboardType="numeric"
-          />
-        </View>
-        {formik.errors.tiempoEstimado ? (
-          <Text style={styles.error}>{formik.errors.tiempoEstimado}</Text>
-        ) : (
-          <></>
-        )}
-        {formik.errors.costo ? (
-          <Text style={styles.error}>{formik.errors.costo}</Text>
-        ) : (
-          <></>
-        )}
-        <View>
-          {posting && <ActivityIndicator size="large" color="white" />}
-        </View>
-        <Button
-          title="Cotizar"
-          onPress={() => {
-            setAccepted(true);
-            formik.handleSubmit();
-          }}
-          backgroundColor="green"
-          textColor="white"
-          style={styles.button}
-        />
-        <Button
-          title="Rechazar"
-          onPress={() => {
-            setAccepted(false);
-            formik.handleSubmit();
-          }}
-          backgroundColor="red"
-          textColor="white"
-          style={styles.button}
-        />*/
   return (
     <ScrollView>
       <View style={styles.messageConditionContainer}>
-        <Text style={styles.infoText}>{infoText}</Text>
+        {infoText != "" && <Text style={styles.infoText}>{infoText}</Text>}
         <View style={styles.rowContainer}>
           <Image style={styles.servImage} source={source} />
           <View>
@@ -244,70 +199,118 @@ export default function ServiceDetails(props) {
             </Text>
           </View>
         </View>
-        <Text style={styles.messageDataText}>Observaciones:</Text>
-        <View style={styles.segmentedControls}>
-          <SegmentedControls
-            options={options}
-            onSelection={setSelectedOption.bind(this)}
-            selectedOption={state.selectedOption}
-            optionStyle={{
-              fontSize: 11,
-              textAlign: "center",
-            }}
-            optionContainerStyle={{ justifyContent: "center" }}
-          />
-        </View>
-        {state.selectedOption == "Otros" && (
-          <TextInput
-            placeholder="Escribe tus observaciones."
-            style={styles.multilineInput}
-            value={formik.values.observacionesBlocker}
-            multiline
-            numberOfLines={5}
-            onChangeText={(text) =>
-              formik.setFieldValue("observacionesBlocker", text)
-            }
-          />
-        )}
-        <Text style={styles.messageDataText}>Deja tu calificación:</Text>
-        <View style={styles.segmentedControls}>
-          <SegmentedControls
-            options={numberStars}
-            onSelection={setSelectedStars.bind(this)}
-            selectedOption={stars.selectedStars}
-          />
-        </View>
+        {serviceDetails == "ver" && (
+          <>
+            <View style={styles.container}>
+              <Text style={styles.messageDataText}>
+                Calificación de parte del cliente:
+              </Text>
+              <View style={styles.rowContainer}>
+                {getStars(serviceItem.calificacionBlocker)}
+              </View>
+            </View>
+            <Text style={styles.messageDataText}>
+              Comentarios de parte del cliente:
+            </Text>
+            <View style={styles.secondaryContainer}>
+              <Text style={styles.secondaryText}>
+                {serviceItem.comentarioCliente}
+              </Text>
+            </View>
 
-        <Text style={styles.messageDataText}>Comentarios:</Text>
-        <TextInput
-          placeholder="Escribe tus comentarios."
-          style={styles.multilineInput}
-          value={formik.values.comentarioBlocker}
-          multiline
-          numberOfLines={5}
-          onChangeText={(text) =>
-            formik.setFieldValue("comentarioBlocker", text)
-          }
-        />
-        {formik.errors.calificacionCliente ? (
-          <Text style={styles.error}>{formik.errors.calificacionCliente}</Text>
-        ) : (
-          <></>
+            <View style={styles.container}>
+              <Text style={styles.messageDataText}>
+                Calificación otorgada al cliente:
+              </Text>
+              <View style={styles.rowContainer}>
+                {getStars(serviceItem.calificacionCliente)}
+              </View>
+            </View>
+            <Text style={styles.messageDataText}>
+              Comentarios para el cliente:
+            </Text>
+            <View style={styles.secondaryContainer}>
+              <Text style={styles.secondaryText}>
+                {serviceItem.comentarioBlocker}
+              </Text>
+            </View>
+          </>
         )}
-        {formik.errors.comentarioBlocker ? (
-          <Text style={styles.error}>{formik.errors.comentarioBlocker}</Text>
-        ) : (
-          <></>
+        {showForm && (
+          <>
+            <Text style={styles.messageDataText}>Observaciones:</Text>
+            <View style={styles.segmentedControls}>
+              <SegmentedControls
+                options={options}
+                onSelection={setSelectedOption.bind(this)}
+                selectedOption={state.selectedOption}
+                optionStyle={{
+                  fontSize: 11,
+                  textAlign: "center",
+                }}
+                optionContainerStyle={{ justifyContent: "center" }}
+              />
+            </View>
+            {state.selectedOption == "Otros" && (
+              <TextInput
+                placeholder="Escribe tus observaciones."
+                style={styles.multilineInput}
+                value={formik.values.observacionesBlocker}
+                multiline
+                numberOfLines={5}
+                onChangeText={(text) =>
+                  formik.setFieldValue("observacionesBlocker", text)
+                }
+              />
+            )}
+            <Text style={styles.messageDataText}>Deja tu calificación:</Text>
+            <View style={styles.segmentedControls}>
+              <SegmentedControls
+                options={numberStars}
+                onSelection={setSelectedStars.bind(this)}
+                selectedOption={stars.selectedStars}
+              />
+            </View>
+
+            <Text style={styles.messageDataText}>Comentarios:</Text>
+            <TextInput
+              placeholder="Escribe tus comentarios."
+              style={styles.multilineInput}
+              value={formik.values.comentarioBlocker}
+              multiline
+              numberOfLines={5}
+              onChangeText={(text) =>
+                formik.setFieldValue("comentarioBlocker", text)
+              }
+            />
+            {formik.errors.calificacionCliente ? (
+              <Text style={styles.error}>
+                {formik.errors.calificacionCliente}
+              </Text>
+            ) : (
+              <></>
+            )}
+            {formik.errors.comentarioBlocker ? (
+              <Text style={styles.error}>
+                {formik.errors.comentarioBlocker}
+              </Text>
+            ) : (
+              <></>
+            )}
+            <View>
+              {posting && <ActivityIndicator size="large" color="white" />}
+            </View>
+            <Button
+              title="Enviar"
+              onPress={() => {
+                formik.handleSubmit();
+              }}
+              backgroundColor="white"
+              textColor="blue"
+              style={styles.button}
+            />
+          </>
         )}
-        <Button
-          title="Enviar"
-          onPress={() => {
-            formik.handleSubmit();
-          }}
-          backgroundColor="white"
-          textColor="blue"
-          style={styles.button}
-        />
       </View>
     </ScrollView>
   );
@@ -321,12 +324,12 @@ const styles = StyleSheet.create({
     width: "80%",
     alignSelf: "center",
     justifyContent: "center",
+    paddingVertical: 10,
   },
   infoText: {
     color: "white",
     textAlignVertical: "center",
     marginVertical: 5,
-    marginTop: 10,
     marginHorizontal: 15,
   },
   messageDataText: {
@@ -339,6 +342,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 10,
     alignItems: "center",
+    alignSelf: "center",
   },
   inputRowContainer: {
     flexDirection: "row",
@@ -371,7 +375,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     alignSelf: "flex-start",
-    margin: 15,
+    margin: 5,
     backgroundColor: "white",
     borderRadius: 30,
   },

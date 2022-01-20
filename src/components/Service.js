@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import ServiceDetails from "./ServiceDetails";
 import ServiceList from "./ServiceList";
+import Checkbox from "expo-checkbox";
 
 export default function Service(props) {
   const {
@@ -11,6 +12,8 @@ export default function Service(props) {
     showServiceDetails,
     serviceDetails,
     serviceItem,
+    setFinalizado,
+    finalizado,
   } = props;
 
   return (
@@ -20,6 +23,19 @@ export default function Service(props) {
           {serviceDetails ? <>Servicio</> : <>Servicios</>}
         </Text>
       </View>
+      {!serviceDetails && (
+        <View style={styles.checkboxContainer}>
+          <Text style={{ color: "blue" }}>Ver finalizados</Text>
+          <Checkbox
+            style={styles.checkbox}
+            value={finalizado}
+            onValueChange={() => {
+              setFinalizado(!finalizado);
+            }}
+            key={0}
+          />
+        </View>
+      )}
       {serviceDetails ? (
         <ServiceDetails
           serviceItem={serviceItem}
@@ -44,7 +60,6 @@ const styles = StyleSheet.create({
   secondaryContainer: {
     backgroundColor: "blue",
     borderRadius: 30,
-    marginBottom: 15,
     marginVertical: 30,
     width: "60%",
     alignSelf: "center",
@@ -60,7 +75,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     backgroundColor: "blue",
     borderRadius: 30,
-    marginBottom: 15,
+
     marginVertical: 30,
     width: "80%",
     alignSelf: "center",
@@ -86,5 +101,17 @@ const styles = StyleSheet.create({
   button: {
     textAlign: "center",
     paddingHorizontal: 12,
+  },
+
+  checkbox: {
+    justifyContent: "center",
+    alignSelf: "center",
+    marginLeft: 5,
+  },
+  checkboxContainer: {
+    justifyContent: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    marginBottom: 10,
   },
 });

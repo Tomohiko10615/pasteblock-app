@@ -63,9 +63,9 @@ export default function ServiceItem(props) {
               style={{ ...styles.button, width: 120 }}
             />
             <Button
-              title="Reportar/Cancelar"
+              title="Reportar"
               onPress={() => {
-                showServiceDetails(item, "cancelar");
+                showServiceDetails(item, "reportar");
               }}
               backgroundColor="red"
               textColor="white"
@@ -83,15 +83,17 @@ export default function ServiceItem(props) {
               textColor="blue"
               style={styles.button}
             />
-            <Button
-              title="Modificar calificaciones"
-              onPress={() => {
-                showServiceDetails(item, "editar");
-              }}
-              backgroundColor="white"
-              textColor="blue"
-              style={styles.button}
-            />
+            {!item.haFinalizado && (
+              <Button
+                title="Modificar calificaciones"
+                onPress={() => {
+                  showServiceDetails(item, "editar");
+                }}
+                backgroundColor="white"
+                textColor="blue"
+                style={styles.button}
+              />
+            )}
           </>
         )}
       </View>
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
   messageContainer: {
     backgroundColor: "blue",
     borderRadius: 30,
-    marginBottom: 15,
     marginVertical: 30,
     width: "80%",
     alignSelf: "center",
