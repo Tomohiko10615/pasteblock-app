@@ -115,22 +115,22 @@ export const routes = [
   {
     name: screens.MessageStack,
     focusedRoute: screens.MessageStack,
-    title: "Inbox",
+    title: "Notificaciones",
     showInTab: true,
     showInDrawer: false,
     icon: (focused) => (
-      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+      <Icon name="bell" size={30} color={focused ? "#551E18" : "#000"} />
     ),
   },
 
   {
     name: screens.Message,
     focusedRoute: screens.Message,
-    title: "Inbox",
+    title: "Notificaciones",
     showInTab: true,
     showInDrawer: false,
     icon: (focused) => (
-      <Icon name="user" size={30} color={focused ? "#551E18" : "#000"} />
+      <Icon name="bell" size={30} color={focused ? "#551E18" : "#000"} />
     ),
   },
   {

@@ -64,7 +64,7 @@ const BottomTabNavigator = () => {
         component={MessageStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icon name="inbox" color={color} size={size} />
+            <Icon name="bell" color={color} size={size} />
           ),
         }}
       />

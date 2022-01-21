@@ -31,7 +31,14 @@ export default function Home(props) {
             navigation.navigate("MessageStack");
           }}
         />
-        <Button backgroundColor="blue" textColor="white" title="Servicios" />
+        <Button
+          backgroundColor="blue"
+          textColor="white"
+          title="Servicios"
+          onPress={() => {
+            navigation.navigate("ServiceStack");
+          }}
+        />
       </View>
       <Button
         backgroundColor="blue"

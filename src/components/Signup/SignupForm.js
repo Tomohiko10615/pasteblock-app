@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -13,10 +13,19 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
 import Header from "../Header";
+import { getToken } from "../../../App";
 
 export default function SignupForm() {
   const { signUp } = useReg();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      formik.values.tokenDispositivo = await getToken();
+      console.log(formik.values.tokenDispositivo);
+    })();
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       nombre: "",

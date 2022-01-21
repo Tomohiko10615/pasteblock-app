@@ -74,6 +74,7 @@ export default function ServiceDetails(props) {
   }
 
   useLayoutEffect(() => {
+    setActualizar(false);
     if (serviceDetails == "culminar") {
       setEstadoBlocker(true);
     } else if (serviceDetails == "reportar") {
@@ -139,7 +140,7 @@ export default function ServiceDetails(props) {
           comentarioBlocker: formik.values.comentarioBlocker,
           observacionesBlocker: observacionesBlocker,
         };
-
+        console.log(actualizar);
         const url =
           "https://pasteblock.herokuapp.com/api/contrato?" +
           "estadoBlocker=" +
@@ -263,12 +264,15 @@ export default function ServiceDetails(props) {
                 }
               />
             )}
-            <Text style={styles.messageDataText}>Deja tu calificación:</Text>
+            <Text style={styles.messageDataText}>
+              Deja tu calificación <Icon name="star" color="white" />
+            </Text>
             <View style={styles.segmentedControls}>
               <SegmentedControls
                 options={numberStars}
                 onSelection={setSelectedStars.bind(this)}
                 selectedOption={stars.selectedStars}
+                stars={true}
               />
             </View>
 
