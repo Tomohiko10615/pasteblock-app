@@ -14,7 +14,7 @@ import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { AsyncStorageStatic } from "react-native";
+import { getToken } from "../../../App";
 
 export default function LoginForm(props) {
   const [error, setError] = useState("");
@@ -70,6 +70,27 @@ export default function LoginForm(props) {
 
         if (result.success) {
           login(result.success, result.email, result.nombre, result.context);
+          let token = await getToken();
+          console.log(token);
+          console.log(result.token);
+          if (token != result.token) {
+            const url = "https://pasteblock.herokuapp.com/api/token";
+            const usuario = { tokenDispositivo: token };
+            console.log(url);
+            try {
+              const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(usuario),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              const resultToken = await response.json();
+              return resultToken;
+            } catch (error) {
+              throw error;
+            }
+          }
         } else {
           setError("Email o contraseña incorrectos");
         }

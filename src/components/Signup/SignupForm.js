@@ -21,7 +21,8 @@ export default function SignupForm() {
 
   useEffect(() => {
     (async () => {
-      formik.values.tokenDispositivo = await getToken();
+      let token = await getToken();
+      formik.setFieldValue("tokenDispositivo", token);
       console.log(formik.values.tokenDispositivo);
     })();
   }, []);
