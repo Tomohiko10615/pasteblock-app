@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1060169364233",
+    "project_id": "pasteblock-65de9",
+    "storage_bucket": "pasteblock-65de9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060169364233:android:0e67973bc8ccd9e32919d8",
+        "android_client_info": {
+          "package_name": "pasteblock.apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060169364233-q64ol2rot2cafs2gk33bk31cl6b3v4qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANUaI3KncXOuRPm8SeZOiQ7-VDO3lE6oo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060169364233-q64ol2rot2cafs2gk33bk31cl6b3v4qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

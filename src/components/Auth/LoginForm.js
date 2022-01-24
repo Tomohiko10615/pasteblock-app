@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -9,43 +9,15 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
-import useLoading from "../../hooks/useLoading";
 import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { getToken } from "../../../App";
 
-export default function LoginForm(props) {
+export default function LoginForm() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const [logging, setLogging] = useState(false);
-  //const { loading } = useLoading();
-
-  //let navigation = useNavigation();
-
-  /*useEffect(() => {
-    navigation.setOptions({
-      tabBarVisible: false,
-      swipeEnabled: false,
-      gestureEnabled: false,
-    });
-    const stackNavigator = navigation.dangerouslyGetParent();
-    //console.log(stackNavigator.dangerouslyGetParent());
-    if (stackNavigator) {
-      stackNavigator.setOptions({
-        tabBarVisible: false,
-        swipeEnabled: false,
-        gestureEnabled: false,
-      });
-    }
-  }, [auth, navigation]);*/
-
-  /*useEffect(() => {
-    (async () => {
-      await loadUserData();
-    })();
-  }, [login]);*/
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -65,14 +37,14 @@ export default function LoginForm(props) {
           }
         );
         const result = await response.json();
+        const token = await getToken();
         setLogging(false);
-        console.log(result);
+
+        console.log(token);
 
         if (result.success) {
           login(result.success, result.email, result.nombre, result.context);
-          let token = await getToken();
-          console.log(token);
-          console.log(result.token);
+
           if (token != result.token) {
             const url = "https://pasteblock.herokuapp.com/api/token";
             const usuario = { tokenDispositivo: token };
@@ -101,17 +73,6 @@ export default function LoginForm(props) {
       }
     },
   });
-
-  /*
-  const loadUserData = async () => {
-    try {
-      const response = await getAuthUserApi({ userData }.userData);
-      setUserAuthData(response);
-      setNombre({ userAuthData }.userAuthData.nombre);
-    } catch (error) {
-      console.log(error);
-    }
-  };*/
 
   return (
     <View style={{ backgroundColor: "blue", height: "100%" }}>

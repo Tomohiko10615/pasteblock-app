@@ -9,7 +9,9 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#00f"
+      
     },
+
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -24,10 +26,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "pasteblock.apk"
+      "package": "pasteblock.apk",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
+    
   }
 }

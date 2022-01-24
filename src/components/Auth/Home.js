@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, Fragment } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import useAuth from "../../hooks/useAuth";
 import Button from "../Button";
@@ -9,14 +9,6 @@ export default function Home(props) {
   const { nombre } = useAuth();
   const { navigation } = props;
   const { profileEdit } = useReg();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      gestureEnabled: true,
-      swipeEnabled: true,
-      tabBarVisible: true,
-    });
-  }, []);
 
   return (
     <View>

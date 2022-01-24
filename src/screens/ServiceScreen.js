@@ -55,7 +55,7 @@ export default function ServiceScreen() {
         setEndOfData(true);
       }
       setLoaded(true);
-      console.log(finalizado);
+      console.log(serviceData);
       return result;
     } catch (e) {
       console.log(e);

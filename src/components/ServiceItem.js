@@ -51,7 +51,7 @@ export default function ServiceItem(props) {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        {!item.haFinalizado ? (
+        {!item.culminacionBlocker ? (
           <>
             <Button
               title="Culminar trabajo"

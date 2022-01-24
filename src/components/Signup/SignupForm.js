@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
 import Header from "../Header";
-import { getToken } from "../../../App";
+import { getToken } from "../../utils/Token";
 
 export default function SignupForm() {
   const { signUp } = useReg();
