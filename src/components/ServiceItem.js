@@ -51,7 +51,7 @@ export default function ServiceItem(props) {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        {!item.culminacionBlocker ? (
+        {!item.culminacionBlocker && !item.haFinalizado ? (
           <>
             <Button
               title="Culminar trabajo"
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     backgroundColor: "blue",
     borderRadius: 30,
-    marginVertical: 30,
+    marginVertical: 15,
     width: "80%",
     alignSelf: "center",
     justifyContent: "center",

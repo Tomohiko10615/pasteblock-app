@@ -36,7 +36,7 @@ export const getStars = (stars) => {
 
 const styles = StyleSheet.create({
   star: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });

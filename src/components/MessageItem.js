@@ -66,8 +66,8 @@ export default function MessageItem(props) {
           backgroundColor = "grey";
           break;
         default:
-          status = "Nueva solicitud";
-          backgroundColor = "black";
+          status = "Nuevo";
+          backgroundColor = "#FC4C02";
           break;
       }
       break;
@@ -117,8 +117,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     backgroundColor: "blue",
     borderRadius: 30,
-    marginBottom: 15,
-    marginVertical: 30,
+    marginVertical: 15,
     width: "80%",
     alignSelf: "center",
     justifyContent: "center",

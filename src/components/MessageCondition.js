@@ -142,7 +142,7 @@ export default function MessageCondition(props) {
           onChangeText={(text) => formik.setFieldValue("mensajeBlocker", text)}
         />
         <View style={styles.inputRowContainer}>
-          <Text style={styles.inputDataText}>Tiempo estimado:</Text>
+          <Text style={styles.inputDataText}>Tiempo estimado (días):</Text>
           <TextInput
             placeholder=""
             style={styles.input}
@@ -154,7 +154,7 @@ export default function MessageCondition(props) {
           />
         </View>
         <View style={styles.inputRowContainer}>
-          <Text style={styles.inputDataText}>Costo estimado:</Text>
+          <Text style={styles.inputDataText}>Costo estimado (S/.):</Text>
           <TextInput
             placeholder=""
             style={styles.input}
@@ -174,7 +174,13 @@ export default function MessageCondition(props) {
           <></>
         )}
         <View>
-          {posting && <ActivityIndicator size="large" color="white" />}
+          {posting && (
+            <ActivityIndicator
+              size="large"
+              color="white"
+              style={styles.spinner}
+            />
+          )}
         </View>
         <Button
           title="Cotizar"
@@ -282,5 +288,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
     color: "#f00",
+  },
+  spinner: {
+    marginBottom: 10,
   },
 });
