@@ -11,7 +11,7 @@ const MessageStackNavigator = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Profile" component={MessageScreen} />
+      <Stack.Screen name="Message" component={MessageScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 
 export const AuthContext = createContext({
   auth: undefined,
@@ -6,17 +6,23 @@ export const AuthContext = createContext({
   nombre: undefined,
   userData: undefined,
   context: undefined,
+  token: undefined,
   login: () => {},
   logout: () => {},
 });
 
 export function AuthProvider(props) {
-  const { children } = props;
+  const { children, expoPushToken } = props;
   const [auth, setAuth] = useState(undefined);
   const [userData, setUserData] = useState(undefined);
   const [nombre, setNombre] = useState(undefined);
   const [context, setContext] = useState(undefined);
   const [isLoggingOut, setIsLoggingOut] = useState(undefined);
+  const [token, setToken] = useState(undefined);
+
+  useEffect(() => {
+    setToken(expoPushToken);
+  }, [expoPushToken]);
 
   const login = (auth, userData, nombre, context) => {
     setAuth(auth);
@@ -39,6 +45,7 @@ export function AuthProvider(props) {
     nombre,
     context,
     isLoggingOut,
+    token,
     login,
     logout,
   };

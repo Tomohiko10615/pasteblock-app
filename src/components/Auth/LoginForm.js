@@ -16,7 +16,7 @@ import { getToken } from "../../../App";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { token, login } = useAuth();
   const [logging, setLogging] = useState(false);
 
   const formik = useFormik({
@@ -37,10 +37,8 @@ export default function LoginForm() {
           }
         );
         const result = await response.json();
-        const token = await getToken();
+        //const token = await getToken();
         setLogging(false);
-
-        console.log(token);
 
         if (result.success) {
           login(result.success, result.email, result.nombre, result.context);
