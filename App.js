@@ -3,7 +3,7 @@ import { AuthProvider } from "./src/context/AuthContext";
 import { RegProvider } from "./src/context/RegContext";
 import { LoadingProvider } from "./src/context/LoadingContext";
 import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useLinkTo } from "@react-navigation/native";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
 import * as Linking from "expo-linking";
@@ -12,10 +12,9 @@ import useAuth from "./src/hooks/useAuth";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useNavigation } from "@react-navigation/native";
+import { linking } from "./src/navigation/DrawerNavigator";
 
-const prefix = Linking.makeUrl("/");
-
-const linking = {
+/*const linking = {
   prefixes: [prefix],
   config: {
     screens: {
@@ -23,7 +22,7 @@ const linking = {
         screens: {
           HomeTab: {
             screens: {
-              MessageStack: { screens: { Message: "message" } },
+              MessageStack: { screens: { Message: { path: "message" } } },
               ServiceStack: { screens: { Service: "service" } },
             },
           },
@@ -31,7 +30,7 @@ const linking = {
       },
     },
   },
-};
+};*/
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
@@ -78,7 +77,8 @@ export default function App() {
   const responseListener = useRef();
   const { login } = useAuth();
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
+  //const linkTo = useLinkTo();
 
   useEffect(() => {
     if (
@@ -91,8 +91,9 @@ export default function App() {
         lastNotificationResponse.notification.request.content.title ==
         "Nueva solicitud"
       ) {
-        console.log("flag");
-        //Linking.openURL(Linking.makeUrl("message"));
+        Linking.openURL(Linking.createURL("/message"));
+        //navigation.navigate("MessageStack");
+        //linkTo("/message");
       }
     }
   }, [lastNotificationResponse]);
@@ -125,7 +126,7 @@ export default function App() {
         <AuthProvider expoPushToken={expoPushToken}>
           <RegProvider>
             <LoadingProvider>
-              <DrawerNavigator name="Drawer" nav={nav} />
+              <DrawerNavigator nav={nav} />
             </LoadingProvider>
           </RegProvider>
         </AuthProvider>

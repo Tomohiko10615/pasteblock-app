@@ -17,10 +17,25 @@ import { routes, screens } from "./RouteItems";
 
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { DrawerItem } from "@react-navigation/drawer";
-
+import * as Linking from "expo-linking";
 import { Text, StyleSheet, View } from "react-native";
 
 const Drawer = createDrawerNavigator();
+
+const prefix = Linking.createURL("/");
+export const linking = {
+  prefixes: [prefix],
+  config: {
+    screens: {
+      HomeTab: {
+        screens: {
+          MessageStack: "message",
+          ServiceStack: "service",
+        },
+      },
+    },
+  },
+};
 
 const CustomDrawerContent = (props) => {
   const currentRouteName = props.nav()?.getCurrentRoute().name; // get focused route name
