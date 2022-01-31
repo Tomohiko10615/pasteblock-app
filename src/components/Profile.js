@@ -24,9 +24,9 @@ export default function Profile(props) {
     console.log(servicios);
   }, [blocker]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-  }, []);
+  }, []);*/
 
   return (
     <View style={styles.mainContainer}>
@@ -47,6 +47,7 @@ export default function Profile(props) {
       </View>
 
       <Text style={styles.text}>Distritos:</Text>
+
       <FlatList
         nestedScrollEnabled={true}
         data={distritos}
@@ -60,7 +61,9 @@ export default function Profile(props) {
         )}
         contentContainerStyle={styles.flatListContainer}
       />
+
       <Text style={styles.text}>Servicios:</Text>
+
       <FlatList
         nestedScrollEnabled={true}
         data={servicios}
@@ -74,6 +77,7 @@ export default function Profile(props) {
         )}
         contentContainerStyle={styles.flatListContainer}
       />
+
       <Text style={styles.text}>Celular: {profileData.celular}</Text>
 
       <Button

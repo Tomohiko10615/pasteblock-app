@@ -76,6 +76,7 @@ export default function ProfileScreen() {
       <LoggedHeader />
       {profileData && blocker && distritos && servicios ? (
         <ScrollView
+          nestedScrollEnabled={true}
           contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
         >
           {edit ? (

@@ -19,13 +19,13 @@ export default function SignupForm() {
   const { signUp } = useReg();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  /* useEffect(() => {
     (async () => {
       let token = await getToken();
       formik.setFieldValue("tokenDispositivo", token);
       console.log(formik.values.tokenDispositivo);
     })();
-  }, []);
+  }, []);*/
 
   const formik = useFormik({
     initialValues: {

@@ -33,6 +33,7 @@ export const linking = {
           ServiceStack: "service",
         },
       },
+      Signup: "signup",
     },
   },
 };

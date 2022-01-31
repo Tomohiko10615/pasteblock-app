@@ -108,7 +108,7 @@ export default function LoginForm() {
       <Text style={styles.error}>{error}</Text>
       <Text style={styles.text}>
         ¿No tienes cuenta?{" "}
-        <Link style={styles.link} to="/Signup">
+        <Link style={styles.link} to="/signup">
           Regístrate aquí
         </Link>
       </Text>
