@@ -13,7 +13,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
 import Header from "../Header";
-import { getToken } from "../../utils/Token";
 
 export default function SignupForm() {
   const { signUp } = useReg();
@@ -73,8 +72,8 @@ export default function SignupForm() {
   return (
     <View style={{ backgroundColor: "blue", height: "100%" }}>
       <Header />
-      <KeyboardAvoidingView behavior="padding">
-        <ScrollView>
+      <ScrollView>
+        <KeyboardAvoidingView >
           <Text style={styles.title}>Registro</Text>
           <TextInput
             placeholder="Nombre"
@@ -82,12 +81,18 @@ export default function SignupForm() {
             value={formik.values.nombre}
             onChangeText={(text) => formik.setFieldValue("nombre", text)}
           />
+          {formik.errors.nombre && (
+            <Text style={styles.error}>{formik.errors.nombre}</Text>
+          )}
           <TextInput
             placeholder="Apellidos"
             style={styles.input}
             value={formik.values.apellido}
             onChangeText={(text) => formik.setFieldValue("apellido", text)}
           />
+          {formik.errors.apellido && (
+            <Text style={styles.error}>{formik.errors.apellido}</Text>
+          )}
           <TextInput
             placeholder="Email"
             style={styles.input}
@@ -95,6 +100,9 @@ export default function SignupForm() {
             value={formik.values.email}
             onChangeText={(text) => formik.setFieldValue("email", text)}
           />
+          {formik.errors.email && (
+            <Text style={styles.error}>{formik.errors.email}</Text>
+          )}
           <TextInput
             placeholder="Celular"
             style={styles.input}
@@ -103,6 +111,20 @@ export default function SignupForm() {
             value={formik.values.celular}
             onChangeText={(text) => formik.setFieldValue("celular", text)}
           />
+          {formik.errors.celular && (
+            <Text style={styles.error}>{formik.errors.celular}</Text>
+          )}
+          <TextInput
+            placeholder="Documento de Identidad"
+            style={styles.input}
+            autoCapitalize="none"
+            keyboardType="numeric"
+            value={formik.values.documentoIdentidad}
+            onChangeText={(text) => formik.setFieldValue("documentoIdentidad", text)}
+          />
+          {formik.errors.documentoIdentidad && (
+            <Text style={styles.error}>{formik.errors.documentoIdentidad}</Text>
+          )}
           <TextInput
             placeholder="Contraseña"
             style={styles.input}
@@ -111,6 +133,9 @@ export default function SignupForm() {
             value={formik.values.password}
             onChangeText={(text) => formik.setFieldValue("password", text)}
           />
+          {formik.errors.password && (
+            <Text style={styles.error}>{formik.errors.password}</Text>
+          )}
           <TextInput
             placeholder="Confirmar contraseña"
             style={styles.input}
@@ -121,52 +146,24 @@ export default function SignupForm() {
               formik.setFieldValue("passwordConfirmation", text)
             }
           />
-
-          <View style={styles.spinner}>
-            {loading && <ActivityIndicator size="large" color="white" />}
-          </View>
-          <Button
-            title="Registrarse"
-            onPress={formik.handleSubmit}
-            backgroundColor="white"
-            textColor="blue"
-          />
-
-          {formik.errors.nombre ? (
-            <Text style={styles.error}>{formik.errors.nombre}</Text>
-          ) : (
-            <Fragment></Fragment>
-          )}
-          {formik.errors.apellido ? (
-            <Text style={styles.error}>{formik.errors.apellido}</Text>
-          ) : (
-            <Fragment></Fragment>
-          )}
-          {formik.errors.email ? (
-            <Text style={styles.error}>{formik.errors.email}</Text>
-          ) : (
-            <Fragment></Fragment>
-          )}
-          {formik.errors.celular ? (
-            <Text style={styles.error}>{formik.errors.celular}</Text>
-          ) : (
-            <Fragment></Fragment>
-          )}
-          {formik.errors.password ? (
-            <Text style={styles.error}>{formik.errors.password}</Text>
-          ) : (
-            <Fragment></Fragment>
-          )}
-          {formik.errors.passwordConfirmation ? (
+          {formik.errors.passwordConfirmation && (
             <Text style={styles.error}>
               {formik.errors.passwordConfirmation}
             </Text>
-          ) : (
-            <Fragment></Fragment>
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+        <View style={styles.spinner}>
+          {loading && <ActivityIndicator size="large" color="white" />}
+        </View>
+        <Button
+          title="Registrarse"
+          onPress={formik.handleSubmit}
+          backgroundColor="white"
+          textColor="blue"
+        />
+
+      </ScrollView>
+    </View >
   );
 }
 
@@ -181,6 +178,10 @@ function validationSchema() {
       .required("Ingrese un número móvil")
       .min(9, "Ingrese un número móvil válido")
       .max(9, "Ingrese un número móvil válido"),
+    documentoIdentidad: Yup.string()
+      .required("Ingrese su número de documento de identidad")
+      .min(8, "Ingrese un documento de identidad válido")
+      .max(8, "Ingrese un documento de identidad válido"),
     password: Yup.string()
       .required("Ingrese una contraseña")
       .min(
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    marginBottom: 15,
+    marginBottom: 10,
     borderWidth: 1,
     padding: 10,
     borderRadius: 20,
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
   },
   error: {
     textAlign: "center",
-    marginTop: 10,
+    marginBottom: 10,
     color: "#f00",
   },
   spinner: {

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pasteblock",
     "slug": "Pasteblock",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -11,7 +11,6 @@
       "backgroundColor": "#00f"
     },
     "scheme": "pasteblock",
-
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -29,11 +28,13 @@
       "package": "pasteblock.apk",
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
-      "permissions": ["RECEIVE_BOOT_COMPLETED"]
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
-    
   }
 }

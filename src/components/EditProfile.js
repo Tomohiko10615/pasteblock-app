@@ -41,7 +41,7 @@ export default function EditProfile(props) {
 
   const route = useRoute();
 
-  const hostUrl = "https://pasteblock.herokuapp.com/uploads/";
+  const hostUrl = "https://pasteblockbucket.s3.amazonaws.com/uploads/";
 
   const imgUrl = hostUrl + blocker.foto;
 

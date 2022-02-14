@@ -16,7 +16,7 @@ export default function Profile(props) {
   const { profileData, blocker, distritos, servicios } = props;
   const { profileEdit } = useReg();
 
-  const hostUrl = "https://pasteblock.herokuapp.com/uploads/";
+  const hostUrl = "https://pasteblockbucket.s3.amazonaws.com/uploads/";
 
   const imgUrl = hostUrl + blocker.foto;
 

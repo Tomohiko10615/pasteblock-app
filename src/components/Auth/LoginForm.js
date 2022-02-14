@@ -12,7 +12,7 @@ import useAuth from "../../hooks/useAuth";
 import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
-import { getToken } from "../../../App";
+
 
 export default function LoginForm() {
   const [error, setError] = useState("");
