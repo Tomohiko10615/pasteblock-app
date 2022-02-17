@@ -21,6 +21,8 @@ import Checkbox from "expo-checkbox";
 import Button from "./Button";
 
 import useReg from "../hooks/useReg";
+
+import mime from "mime";
 import {
   useNavigation,
   useFocusEffect,
@@ -50,6 +52,8 @@ export default function EditProfile(props) {
   const [listaDistritos, setListaDistritos] = useState("");
 
   const [render, rerender] = useState(false);
+
+  const [photo, setPhoto] = useState(true);
 
   useEffect(() => {
     console.log(distritos);
@@ -215,6 +219,42 @@ export default function EditProfile(props) {
           }
         );
         const result = await response.json();
+
+        let formData = new FormData();
+
+      formData.append("file", {
+        uri:
+          Platform.OS === "android"
+            ? photoRoot.image
+            : photoRoot.image.replace("file://", ""),
+        name: photoRoot.image.split("/").pop(),
+        type: mime.getType(photoRoot.image),
+      });
+      console.log(formData);
+      const url = "https://pasteblock.herokuapp.com/api/blocker/form/" + blocker.id;
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        //const response = await axios.post(url, formData);
+        const photoResult = await response.json();
+        
+        
+        if (photoResult) {
+          setPhoto(false);
+        }
+        
+      } catch (error) {
+        throw error;
+      }
+
         if (result) {
           navigation.navigate("Success", {
             successMessage: "Su perfil se ha actualizado con éxito",

@@ -13,6 +13,8 @@ import Header from "../Header";
 import Button from "../Button";
 import { Link } from "@react-navigation/native";
 
+import { Keyboard } from 'react-native'
+
 
 export default function LoginForm() {
   const [error, setError] = useState("");
@@ -25,6 +27,7 @@ export default function LoginForm() {
     validateOnChange: false,
 
     onSubmit: async () => {
+
       setLogging(true);
       setError("");
 
@@ -94,14 +97,14 @@ export default function LoginForm() {
 
       <Button
         title="Iniciar sesión"
-        onPress={formik.handleSubmit}
+        onPress={() => { Keyboard.dismiss(); formik.handleSubmit() }}
         backgroundColor="white"
         textColor="blue"
       />
 
-      <View style={styles.spinner}>
-        {logging ? <ActivityIndicator size="large" color="white" /> : <></>}
-      </View>
+      {logging && <View style={styles.spinner} pointerEvents={'none'}>
+        <ActivityIndicator size="large" color="blue" /></View>}
+
 
       <Text style={styles.error}>{formik.errors.email}</Text>
       <Text style={styles.error}>{formik.errors.password}</Text>
@@ -160,7 +163,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textDecorationLine: "underline",
   },
-  spinner: {},
+  spinner: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    height: "100%",
+    width: "100%",
+    zIndex: 3,
+    elevation: 3
+  },
   error: {
     textAlign: "center",
     marginTop: 20,
