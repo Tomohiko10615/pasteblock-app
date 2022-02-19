@@ -9,8 +9,10 @@ import {
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Button";
-import Checkbox from "expo-checkbox";
+
 import useReg from "../../hooks/useReg";
+import Checkbox from "expo-checkbox";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function BlockerProfile(props) {
   const { blockerId, navigation, distritos } = props;
@@ -31,7 +33,23 @@ export default function BlockerProfile(props) {
     isServ4,
   ]);
 
-  const initialCheckedDistritos = [];
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState([]);
+  const [items, setItems] = useState([]);
+
+  const distritosList = []
+
+  useEffect(() => {
+    for (const [key, value] of Object.entries(distritos)) {
+        distritosList.push({
+            label: value.nombre, value: value.id
+        })
+    }
+    setItems(distritosList);
+
+}, [distritos]);
+
+  /*const initialCheckedDistritos = [];
   for (let item of distritos) {
     item.checked = false;
     initialCheckedDistritos.push(item.checked);
@@ -39,12 +57,12 @@ export default function BlockerProfile(props) {
 
   const [checkedDistritos, setCheckedDistritos] = useState(
     initialCheckedDistritos
-  );
+  );*/
 
   //var tempCheckedDistritos = checkedDistritos;
 
   var blockerServicios = [];
-  var blockerDistritos = [];
+  //var blockerDistritos = [];
 
   useEffect(() => {
     (async () => {
@@ -54,9 +72,8 @@ export default function BlockerProfile(props) {
 
   //useEffect(() => {}, [checkedDistritos]);
 
-  const [render, rerender] = useState(false);
 
-  const getDistritos = (distritos) => {
+  /*const getDistritos = (distritos) => {
     let content = [];
     for (let item of distritos) {
       content.push(
@@ -79,7 +96,7 @@ export default function BlockerProfile(props) {
       );
     }
     return content;
-  };
+  };*/
 
   const formik = useFormik({
     initialValues: {
@@ -97,13 +114,15 @@ export default function BlockerProfile(props) {
             blockerServicios.push({ id: i + 1 });
           }
         }
-        console.log(distritos);
-        for (let i = 0; i < distritos.length; i++) {
-          if (checkedDistritos[i]) {
-            blockerDistritos.push(distritos[i]);
-          }
+
+        const blockerDistritos = [];
+
+        console.log(value)
+        for (let i = 0; i < value.length; i++) {
+          blockerDistritos.push({id: value[i], nombre: distritos[value[i] - 1].nombre});
         }
-        console.log(blockerDistritos);
+        console.log(blockerDistritos)
+
         const blocker = {
           id: blockerId,
           servicios: blockerServicios,
@@ -208,9 +227,31 @@ export default function BlockerProfile(props) {
       </View>
 
       <Text style={styles.title}>Distritos</Text>
-      <View style={styles.distritosMainContainer}>
+      <DropDownPicker
+      multiple={true}
+      min={1}
+      open={open}
+      value={value}
+      items={items}
+      setOpen={setOpen}
+      setValue={setValue}
+      setItems={setItems}
+      listMode="SCROLLVIEW"
+      style={styles.drop}
+      placeholder="Selecciona un distrito"
+      searchable={true}
+      language="ES"
+      mode="BADGE"
+      maxHeight={400}
+      closeOnBackPressed={true}
+      bottomOffset={100}
+      itemSeparator={true}
+    />
+
+
+      {/*<View style={styles.distritosMainContainer}>
         {getDistritos(distritos)}
-      </View>
+  </View>*/}
       {formik.errors.presentacion ? (
         <Text style={styles.error}>{formik.errors.presentacion}</Text>
       ) : (
@@ -252,6 +293,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "black",
     textAlignVertical: "top",
+  },
+  drop: {
+    marginBottom: 20,
+    borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: "white",
+    width: "80%",
+    alignSelf: "center",
+    color: "black",
+    textAlignVertical: "center",
   },
   serviciosContainer: {
     width: "80%",

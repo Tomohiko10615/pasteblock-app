@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useLayoutEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import HomeStackNavigator from "./HomeStackNavigator";
@@ -19,6 +19,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { DrawerItem } from "@react-navigation/drawer";
 import * as Linking from "expo-linking";
 import { Text, StyleSheet, View } from "react-native";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -76,7 +77,9 @@ const CustomDrawerContent = (props) => {
 };
 
 const DrawerNavigator = ({ nav }) => {
-  const { auth, isLoggingOut } = useAuth();
+  const { auth, isLoggingOut, login } = useAuth();
+
+  
   return (
     <Drawer.Navigator
       screenOptions={({ navigation }) => ({

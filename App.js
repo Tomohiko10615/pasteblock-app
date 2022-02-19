@@ -14,6 +14,7 @@ import * as Permissions from "expo-permissions";
 import { useNavigation } from "@react-navigation/native";
 import { linking } from "./src/navigation/DrawerNavigator";
 
+
 /*const linking = {
   prefixes: [prefix],
   config: {
@@ -31,6 +32,8 @@ import { linking } from "./src/navigation/DrawerNavigator";
     },
   },
 };*/
+
+
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
@@ -75,17 +78,19 @@ export default function App() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const notificationListener = useRef();
   const responseListener = useRef();
-  const { login } = useAuth();
+  const { auth, login } = useAuth();
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
   //const navigation = useNavigation();
   //const linkTo = useLinkTo();
+
+
 
   useEffect(() => {
     if (
       lastNotificationResponse &&
       lastNotificationResponse.notification.request.content.title &&
       lastNotificationResponse.actionIdentifier ===
-        Notifications.DEFAULT_ACTION_IDENTIFIER
+      Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
       if (
         lastNotificationResponse.notification.request.content.title ==
@@ -97,6 +102,8 @@ export default function App() {
       }
     }
   }, [lastNotificationResponse]);
+
+
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
@@ -121,17 +128,19 @@ export default function App() {
     };
   }, []);
   return (
-    <SafeAreaView style={styles.AndroidSafeArea}>
-      <NavigationContainer linking={linking} ref={navigationRef}>
-        <AuthProvider expoPushToken={expoPushToken}>
+    <AuthProvider expoPushToken={expoPushToken}>
+      <SafeAreaView style={styles.AndroidSafeArea}>
+        <NavigationContainer linking={linking} ref={navigationRef}>
+
           <RegProvider>
             <LoadingProvider>
               <DrawerNavigator nav={nav} />
             </LoadingProvider>
           </RegProvider>
-        </AuthProvider>
-      </NavigationContainer>
-    </SafeAreaView>
+
+        </NavigationContainer>
+      </SafeAreaView>
+    </AuthProvider>
   );
 }
 

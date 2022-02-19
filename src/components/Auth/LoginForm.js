@@ -6,6 +6,8 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
@@ -45,6 +47,17 @@ export default function LoginForm() {
 
         if (result.success) {
           login(result.success, result.email, result.nombre, result.context);
+
+
+
+          try {
+            const jsonValue = JSON.stringify(result)
+            await AsyncStorage.setItem('@authData', jsonValue)
+          } catch (e) {
+            // saving error
+          }
+
+
 
           if (token != result.token) {
             const url = "https://pasteblock.herokuapp.com/api/token";
