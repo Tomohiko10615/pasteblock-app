@@ -6,9 +6,13 @@ import LoggedHeader from "../LoggedHeader";
 import useReg from "../../hooks/useReg";
 
 export default function Home(props) {
-  const { nombre, token } = useAuth();
+  const { nombre, token, JWTtoken } = useAuth();
   const { navigation } = props;
   const { profileEdit } = useReg();
+
+console.log(JWTtoken)
+
+
 
   return (
     <View>

@@ -9,6 +9,7 @@ import {
 import LoggedHeader from "../components/LoggedHeader";
 import Inbox from "../components/Inbox";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import useAuth from "../hooks/useAuth";
 
 export default function MessageScreen() {
   const [messageData, setMessageData] = useState([]);
@@ -18,6 +19,8 @@ export default function MessageScreen() {
   const [messageCondition, setMessageCondition] = useState(false);
   const [messageItem, setMessageItem] = useState(undefined);
 
+  const { JWTtoken } = useAuth();
+
   const showMessageCondition = (item) => {
     setMessageCondition(true);
     setMessageItem(item);
@@ -25,11 +28,22 @@ export default function MessageScreen() {
 
   const isFocused = useIsFocused();
 
+  const myHeaders = new Headers();
+
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', "Bearer " + JWTtoken);
+  console.log(JWTtoken)
+  console.log(myHeaders)
+
   const getMessages = async () => {
     try {
       const url =
         "https://pasteblock.herokuapp.com/api/blocker/inbox?inicio=" + inicio;
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        withCredentials: true,
+        headers: myHeaders,
+      });
       const result = await response.json();
       if (result.length != 0) {
         setMessageData([...messageData, ...result]);

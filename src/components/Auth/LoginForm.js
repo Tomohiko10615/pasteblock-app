@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -20,8 +20,39 @@ import { Keyboard } from 'react-native'
 
 export default function LoginForm() {
   const [error, setError] = useState("");
-  const { token, login } = useAuth();
-  const [logging, setLogging] = useState(false);
+  const { token, login, JWTtoken } = useAuth();
+  const [logging, setLogging] = useState(true);
+
+  const myHeaders = new Headers();
+
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', "Bearer " + JWTtoken);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@authData')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  }
+
+  useEffect(() => {
+    let session = true;
+    (async () => {
+      await getData().then((result) => {
+        if (result !== null) {
+          login(result.success, result.email, result.nombre, result.JWTtoken);
+        }
+        if (session) {
+          setLogging(false);
+        }
+      })
+    })();
+    return () => {
+      session = false;
+    };
+  }, []);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -39,16 +70,15 @@ export default function LoginForm() {
           {
             method: "POST",
             body: JSON.stringify(formik.values),
+            headers: myHeaders,
           }
         );
         const result = await response.json();
-        //const token = await getToken();
+
         setLogging(false);
 
         if (result.success) {
-          login(result.success, result.email, result.nombre, result.context);
-
-
+          login(result.success, result.email, result.nombre, result.JWTtoken);
 
           try {
             const jsonValue = JSON.stringify(result)
@@ -57,12 +87,10 @@ export default function LoginForm() {
             // saving error
           }
 
-
-
           if (token != result.token) {
             const url = "https://pasteblock.herokuapp.com/api/token";
             const usuario = { tokenDispositivo: token };
-            console.log(url);
+
             try {
               const response = await fetch(url, {
                 method: "POST",
@@ -77,8 +105,13 @@ export default function LoginForm() {
               throw error;
             }
           }
+          else if (!result.success) {
+            setError("Email o contraseña incorrectos");
+
+          }
+
         } else {
-          setError("Email o contraseña incorrectos");
+          setError("Error del servidor");
         }
 
         return result;

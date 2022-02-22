@@ -6,7 +6,7 @@ export const AuthContext = createContext({
   isLoggingOut: undefined,
   nombre: undefined,
   userData: undefined,
-  context: undefined,
+  JWTtoken: undefined,
   token: undefined,
   login: () => {},
   logout: () => {},
@@ -17,51 +17,48 @@ export function AuthProvider(props) {
   const [auth, setAuth] = useState(undefined);
   const [userData, setUserData] = useState(undefined);
   const [nombre, setNombre] = useState(undefined);
-  const [context, setContext] = useState(undefined);
+  const [JWTtoken, setJWTtoken] = useState(undefined);
   const [isLoggingOut, setIsLoggingOut] = useState(undefined);
   const [token, setToken] = useState(undefined);
   
 
-  const getData = async () => {
+  const removeItemValue = async (key) => {
     try {
-      const jsonValue = await AsyncStorage.getItem('@authData')
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      // error reading value
+        await AsyncStorage.removeItem(key);
+        return true;
     }
-  }
-
-  useLayoutEffect(() => {
-    (async () => {
-      const result = await getData();
-      login(result.success, result.email, result.nombre, result.context);
-    })();
-  }, []);
+    catch(exception) {
+        return false;
+    }
+}
 
   useEffect(() => {
     setToken(expoPushToken);
   }, [expoPushToken]);
 
-  const login = (auth, userData, nombre, context) => {
+  const login = (auth, userData, nombre, JWTtoken) => {
     setAuth(auth);
     setUserData(userData);
     setNombre(nombre);
-    setContext(context);
+    setJWTtoken(JWTtoken);
   };
 
   const logout = (isLoggingOut) => {
     setAuth(undefined);
     setUserData(undefined);
     setNombre(undefined);
-    setContext(undefined);
+    setJWTtoken(undefined);
     setIsLoggingOut(isLoggingOut);
+
+    removeItemValue('@authData');
+
   };
 
   const valueContext = {
     auth,
     userData,
     nombre,
-    context,
+    JWTtoken,
     isLoggingOut,
     token,
     login,
