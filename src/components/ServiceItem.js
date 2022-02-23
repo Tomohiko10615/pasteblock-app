@@ -43,6 +43,14 @@ export default function ServiceItem(props) {
             <Icon name="dollar" color="white" />
             {"   "} S/.{item.costoFinal}
           </Text>
+          <Text style={styles.messageDataText}>
+            <Icon name="calendar" color="white" />
+            {"   "} Inicio: {item.fechaInicio}
+          </Text>
+          <Text style={styles.messageDataText}>
+            <Icon name="calendar" color="white" />
+            {"   "} Final: {item.fechaFinal}
+          </Text>
           <View style={styles.starsContainer}>
             <Icon name="comment-o" color="white" />
             <Text>{"   "}</Text>

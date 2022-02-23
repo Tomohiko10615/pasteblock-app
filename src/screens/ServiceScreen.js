@@ -9,6 +9,8 @@ import LoggedHeader from "../components/LoggedHeader";
 import { useIsFocused } from "@react-navigation/native";
 
 import Service from "../components/Service";
+import { getHeaders } from "../utils/GetHeaders";
+import useAuth from "../hooks/useAuth";
 
 export default function ServiceScreen() {
   const isFocused = useIsFocused();
@@ -19,7 +21,7 @@ export default function ServiceScreen() {
   const [serviceDetails, setServiceDetails] = useState(undefined);
   const [serviceItem, setServiceItem] = useState(undefined);
   const [finalizado, setFinalizado] = useState(false);
-
+  const { JWTtoken } = useAuth();
   const [render, setRender] = useState(false);
 
   const showServiceDetails = (item, state) => {
@@ -45,7 +47,11 @@ export default function ServiceScreen() {
         inicio +
         "&finalizado=" +
         finalizado;
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        withCredentials: true,
+        headers: getHeaders(JWTtoken),
+      });
       const result = await response.json();
       console.log(inicio);
       if (result.length != 0) {

@@ -10,6 +10,7 @@ import LoggedHeader from "../components/LoggedHeader";
 import Inbox from "../components/Inbox";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import useAuth from "../hooks/useAuth";
+import { getHeaders } from "../utils/GetHeaders";
 
 export default function MessageScreen() {
   const [messageData, setMessageData] = useState([]);
@@ -28,13 +29,6 @@ export default function MessageScreen() {
 
   const isFocused = useIsFocused();
 
-  const myHeaders = new Headers();
-
-  myHeaders.append('Content-Type', 'application/json');
-  myHeaders.append('Authorization', "Bearer " + JWTtoken);
-  console.log(JWTtoken)
-  console.log(myHeaders)
-
   const getMessages = async () => {
     try {
       const url =
@@ -42,7 +36,7 @@ export default function MessageScreen() {
       const response = await fetch(url, {
         method: 'GET',
         withCredentials: true,
-        headers: myHeaders,
+        headers: getHeaders(JWTtoken),
       });
       const result = await response.json();
       if (result.length != 0) {

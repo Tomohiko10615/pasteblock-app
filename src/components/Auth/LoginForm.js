@@ -23,6 +23,16 @@ export default function LoginForm() {
   const { token, login, JWTtoken } = useAuth();
   const [logging, setLogging] = useState(true);
 
+  function afterTimeOut (controller) {
+    controller.abort();
+    setError("La petición ha tomado demasiado tiempo. Revise su conexión y vuelva a intentarlo.");
+    setLogging(false);
+  };
+
+  const controller = new AbortController()
+  const signal = controller.signal
+ 
+
   const myHeaders = new Headers();
 
   myHeaders.append('Content-Type', 'application/json');
@@ -65,15 +75,18 @@ export default function LoginForm() {
       setError("");
 
       try {
+        const timeOut = setTimeout(() => afterTimeOut(controller), 8000)
         const response = await fetch(
           "https://pasteblock.herokuapp.com/api/login",
           {
             method: "POST",
             body: JSON.stringify(formik.values),
             headers: myHeaders,
-          }
+            signal: signal
+          },
         );
         const result = await response.json();
+        clearTimeout(timeOut);
 
         setLogging(false);
 
