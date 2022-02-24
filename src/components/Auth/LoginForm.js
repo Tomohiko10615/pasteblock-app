@@ -26,7 +26,7 @@ export default function LoginForm() {
   const myHeaders = new Headers();
 
   myHeaders.append('Content-Type', 'application/json');
-  myHeaders.append('Authorization', "Bearer " + JWTtoken);
+  //myHeaders.append('Authorization', "Bearer " + JWTtoken);
 
   const getData = async () => {
     try {

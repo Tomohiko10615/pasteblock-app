@@ -32,8 +32,7 @@ export default function MessageScreen() {
 
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append('Authorization', "Bearer " + JWTtoken);
-  console.log(JWTtoken)
-  console.log(myHeaders)
+
 
   const getMessages = async () => {
     try {
