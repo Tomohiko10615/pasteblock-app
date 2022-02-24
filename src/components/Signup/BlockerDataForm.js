@@ -41,8 +41,24 @@ export default function BlockerDataForm(props) {
   }, []);
 
   useEffect(() => {
-    console.log(distritos);
-  }, [distritos]);
+    const cameraPermission = await Camera.getCameraPermissionStatus();
+    alert("fg")
+    switch (cameraPermission) {
+      case "authorized":
+        break;
+      case "non-determined":
+        const newCameraPermission = await Camera.requestCameraPermission();
+        if (newCameraPermission === "denied") {
+          alert("Debes dar permiso para el uso de la cámara.");
+        }
+        break;
+      case "denied":
+        alert("Debes dar permiso para el uso de la cámara.");
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   const handler = (root) => {
     setPhotoRoot(root);

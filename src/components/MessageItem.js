@@ -38,7 +38,7 @@ export default function MessageItem(props) {
       buttonLayout.backgroundColor = "grey";
       break;
     default:
-      buttonLayout.title = "Verificar condiciones";
+      buttonLayout.title = "Cotizar";
       buttonLayout.onPress = () => showMessageCondition(item);
       buttonLayout.backgroundColor = "green";
       break;
@@ -46,29 +46,35 @@ export default function MessageItem(props) {
 
   let status = "";
   let backgroundColor = "";
+  let textColor = "";
 
   switch (item.estadoConfirmacionCliente) {
     case true:
       status = "Confirmado";
       backgroundColor = "green";
+      textColor = "white";
       break;
     case false:
       status = "Rechazado";
       backgroundColor = "red";
+      textColor = "white";
       break;
     default:
       switch (item.estadoConfirmacionBlocker) {
         case true:
-          status = "En espera";
+          status = "¡En espera!";
           backgroundColor = "orange";
+          textColor = "white";
           break;
         case false:
           status = "Finalizado";
           backgroundColor = "grey";
+          textColor = "white";
           break;
         default:
-          status = "Nuevo";
-          backgroundColor = "#FC4C02";
+          status = "¡Nuevo!";
+          backgroundColor = "yellow";
+          textColor = "black";
           break;
       }
       break;
@@ -85,7 +91,10 @@ export default function MessageItem(props) {
               ...{ backgroundColor: backgroundColor },
             }}
           >
-            <Text style={styles.secondaryText}>{status}</Text>
+            <Text style={{
+              ...styles.secondaryText,
+              ...{ color: textColor },
+            }}>{status}</Text>
           </View>
 
           <Text style={styles.messageDataText}>
