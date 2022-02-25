@@ -52,7 +52,7 @@ export default function UploadImage(props) {
           style={imageUploaderStyles.uploadBtn}
         >
           <Text style={imageUploaderStyles.text}>
-            {image ? "Cambiar" : "Subir"} foto
+            {image ? "Seleccionar una foto diferente" : "Seleccionar foto desde la galería"}
           </Text>
           <AntDesign name="camera" size={15} color="blue" />
         </TouchableOpacity>
@@ -64,8 +64,8 @@ export default function UploadImage(props) {
 const imageUploaderStyles = StyleSheet.create({
   container: {
     elevation: 2,
-    height: 150,
-    width: 150,
+    height: 200,
+    width: 200,
     backgroundColor: "#efefef",
     position: "relative",
     borderRadius: 60,
@@ -92,5 +92,6 @@ const imageUploaderStyles = StyleSheet.create({
   text: {
     color: "blue",
     fontSize: 12,
+    textAlign: "center"
   },
 });

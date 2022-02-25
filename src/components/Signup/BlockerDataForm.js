@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
+  Dimensions,
   TextInput,
   View,
   Text,
@@ -18,8 +19,9 @@ import useReg from "../../hooks/useReg";
 import Header from "../Header";
 import { Camera } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { ImageBackground, Alert } from "react-native";
+import { ImageBackground, Alert, PermissionsAndroid } from "react-native";
 import { useRef } from "react";
+import * as Permissions from 'expo-permissions'
 
 export default function BlockerDataForm(props) {
   const [photoRoot, setPhotoRoot] = useState("");
@@ -27,11 +29,11 @@ export default function BlockerDataForm(props) {
   const [photo, setPhoto] = useState(true);
   const [distritos, setDistritos] = useState({});
   const [loading, setLoading] = useState(false);
-  const [startCamera, setStartCamera] = React.useState(false)
+  const [startCamera, setStartCamera] = useState(false)
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
-  const cameraRef = useRef(null)
-
+  const cameraRef = useRef()
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
   async function getDistritos() {
     try {
@@ -64,13 +66,37 @@ export default function BlockerDataForm(props) {
   }, []);*/
 
   const __startCamera = async () => {
-    const { granted } = await Camera.requestCameraPermissionsAsync()
-    if (granted) {
-      Alert.alert("Haz activado los permisos para usar la cámara")
-      setStartCamera(true)
-    } else {
-      Alert.alert("Debes dar permiso para usar la cámara")
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "Permiso para el uso de la cámara",
+          message:
+            "El aplicativo SoyBlocker requiere " +
+            "acceso a la cámara.",
+          buttonNeutral: "Pregúntame luego",
+          buttonNegative: "Cancelar",
+          buttonPositive: "Permitir"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setStartCamera(true)
+      } else {
+        Alert.alert("Debes dar permiso para usar la cámara")
+      }
+    } catch (err) {
+      console.warn(err);
     }
+    /*let cameraPermission = await Camera.getCameraPermissionsAsync();
+    if (!cameraPermission.granted) {
+      const { status } = await Camera.requestCameraPermissionsAsync()
+      //const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      if (status === 'granted') {
+        setStartCamera(true)
+      } else {
+        Alert.alert("Debes dar permiso para usar la cámara")
+      }
+    }*/
   }
 
   const CameraPreview = (photo) => {
@@ -94,21 +120,33 @@ export default function BlockerDataForm(props) {
     )
   }
 
+  const onCameraReady = () => {
+    setIsCameraReady(true);
+  };
+
   const handler = (root) => {
     setPhotoRoot(root);
   };
 
   const __takePicture = async () => {
+    const options = { quality: 0.5, base64: true, skipProcessing: true };
     let cameraPermission = await Camera.getCameraPermissionsAsync();
     if (cameraPermission.granted) {
-      const photo = await cameraRef.current.takePictureAsync();
-      setPreviewVisible(true)
-      setCapturedImage(photo)
+      console.log("sgdfgaaaa")
+
+      try {
+        const photo = await cameraRef.current.takePictureAsync(options);
+        setPreviewVisible(true)
+        setCapturedImage(photo)
+        setPhotoRoot(photo.uri);
+        console.log(photo.uri)
+      } catch (err) {
+        console.log(err)
+      }
+
     } else {
       return;
     }
-
-
   }
 
   const formik = useFormik({
@@ -120,7 +158,6 @@ export default function BlockerDataForm(props) {
 
     onSubmit: async () => {
       setLoading(true);
-      console.log("afdg");
       console.log(photoRoot);
       let formData = new FormData();
 
@@ -175,23 +212,22 @@ export default function BlockerDataForm(props) {
         <Text style={styles.title}>Registro</Text>
         {photo ? (
           <Fragment>
-            <UploadImage someHandlerProp={handler} />
+            {!startCamera && (
+              <UploadImage someHandlerProp={handler} />)}
             <View style={styles.spinner}>
               {loading && <ActivityIndicator size="large" color="white" />}
             </View>
-            <Button
-              title="Subir foto"
-              onPress={formik.handleSubmit}
-              backgroundColor="white"
-              textColor="blue"
-            />
+
 
             {previewVisible && capturedImage ? (
               <CameraPreview photo={capturedImage} />
             ) : (
               <Camera
-                style={{ flex: 1 }}
+                style={{ flex: 1, width: "100%" }}
                 ref={cameraRef}
+                onCameraReady={onCameraReady}
+                type={Camera.Constants.Type.front}
+                ratio={'1:1'}
               >
                 <View
                   style={{
@@ -237,10 +273,7 @@ export default function BlockerDataForm(props) {
 
 
             {startCamera ? (<>
-              <Camera
-                style={{ flex: 1, width: "100%" }}
-                ref={cameraRef}
-              ></Camera>
+
               <View
                 style={{
                   position: 'absolute',
@@ -249,7 +282,7 @@ export default function BlockerDataForm(props) {
                   flex: 1,
                   width: '100%',
                   padding: 20,
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <View
@@ -280,7 +313,8 @@ export default function BlockerDataForm(props) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 alignSelf: 'center',
-                height: 40
+                height: 40,
+                marginBottom: 30
               }}
             >
               <Text
@@ -290,9 +324,17 @@ export default function BlockerDataForm(props) {
                   textAlign: 'center'
                 }}
               >
-                Tomar foto
+                Usar la cámara
               </Text>
             </TouchableOpacity></>)}
+
+            <Button
+              title="Enviar foto"
+              onPress={formik.handleSubmit}
+              backgroundColor="white"
+              textColor="blue"
+            />
+
           </Fragment>
         ) : (
           <BlockerProfile
