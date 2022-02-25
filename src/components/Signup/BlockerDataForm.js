@@ -16,6 +16,10 @@ import axios from "axios";
 import BlockerProfile from "./BlockerProfile";
 import useReg from "../../hooks/useReg";
 import Header from "../Header";
+import { Camera } from 'expo-camera';
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { ImageBackground, Alert } from "react-native";
+import { useRef } from "react";
 
 export default function BlockerDataForm(props) {
   const [photoRoot, setPhotoRoot] = useState("");
@@ -23,6 +27,11 @@ export default function BlockerDataForm(props) {
   const [photo, setPhoto] = useState(true);
   const [distritos, setDistritos] = useState({});
   const [loading, setLoading] = useState(false);
+  const [startCamera, setStartCamera] = React.useState(false)
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [capturedImage, setCapturedImage] = useState(null)
+  const cameraRef = useRef(null)
+
 
   async function getDistritos() {
     try {
@@ -40,29 +49,67 @@ export default function BlockerDataForm(props) {
     })();
   }, []);
 
-  useEffect(() => {
-    const cameraPermission = await Camera.getCameraPermissionStatus();
-    alert("fg")
-    switch (cameraPermission) {
-      case "authorized":
-        break;
-      case "non-determined":
-        const newCameraPermission = await Camera.requestCameraPermission();
-        if (newCameraPermission === "denied") {
-          alert("Debes dar permiso para el uso de la cámara.");
+  /*useEffect(() => {
+    (async () => {
+      let cameraPermission = await Camera.getCameraPermissionsAsync();
+      if (!cameraPermission.granted) {
+        let cameraPermission = await Camera.requestCameraPermissionsAsync();
+        if (!cameraPermission.granted) {
+          alert("Debes dar permiso para usar la cámara")
+        } else {
+          alert("Haz activado los permisos para usar la cámara")
         }
-        break;
-      case "denied":
-        alert("Debes dar permiso para el uso de la cámara.");
-        break;
-      default:
-        break;
+      }
+    })();
+  }, []);*/
+
+  const __startCamera = async () => {
+    const { granted } = await Camera.requestCameraPermissionsAsync()
+    if (granted) {
+      Alert.alert("Haz activado los permisos para usar la cámara")
+      setStartCamera(true)
+    } else {
+      Alert.alert("Debes dar permiso para usar la cámara")
     }
-  }, []);
+  }
+
+  const CameraPreview = (photo) => {
+    console.log('sdsfds', photo)
+    return (
+      <View
+        style={{
+          backgroundColor: 'transparent',
+          flex: 1,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <ImageBackground
+          source={{ uri: photo && photo.uri }}
+          style={{
+            flex: 1
+          }}
+        />
+      </View>
+    )
+  }
 
   const handler = (root) => {
     setPhotoRoot(root);
   };
+
+  const __takePicture = async () => {
+    let cameraPermission = await Camera.getCameraPermissionsAsync();
+    if (cameraPermission.granted) {
+      const photo = await cameraRef.current.takePictureAsync();
+      setPreviewVisible(true)
+      setCapturedImage(photo)
+    } else {
+      return;
+    }
+
+
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -138,6 +185,114 @@ export default function BlockerDataForm(props) {
               backgroundColor="white"
               textColor="blue"
             />
+
+            {previewVisible && capturedImage ? (
+              <CameraPreview photo={capturedImage} />
+            ) : (
+              <Camera
+                style={{ flex: 1 }}
+                ref={cameraRef}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    width: '100%',
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row'
+                  }}
+                >
+                  <View
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      flexDirection: 'row',
+                      flex: 1,
+                      width: '100%',
+                      padding: 20,
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignSelf: 'center',
+                        flex: 1,
+                        alignItems: 'center'
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={__takePicture}
+                        style={{
+                          width: 70,
+                          height: 70,
+                          bottom: 0,
+                          borderRadius: 50,
+                          backgroundColor: '#fff'
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </Camera>
+            )}
+
+
+            {startCamera ? (<>
+              <Camera
+                style={{ flex: 1, width: "100%" }}
+                ref={cameraRef}
+              ></Camera>
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  flexDirection: 'row',
+                  flex: 1,
+                  width: '100%',
+                  padding: 20,
+                  justifyContent: 'space-between'
+                }}
+              >
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    alignItems: 'center'
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={__takePicture}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      bottom: 0,
+                      borderRadius: 50,
+                      backgroundColor: '#fff'
+                    }}
+                  />
+                </View>
+              </View>
+            </>) : (<><TouchableOpacity
+              onPress={__startCamera}
+              style={{
+                width: 130,
+                borderRadius: 4,
+                backgroundColor: '#14274e',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                height: 40
+              }}
+            >
+              <Text
+                style={{
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}
+              >
+                Tomar foto
+              </Text>
+            </TouchableOpacity></>)}
           </Fragment>
         ) : (
           <BlockerProfile
