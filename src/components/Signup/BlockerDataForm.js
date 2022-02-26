@@ -32,7 +32,7 @@ export default function BlockerDataForm(props) {
   const [startCamera, setStartCamera] = useState(false)
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
-  const cameraRef = useRef()
+  const cameraRef = useRef(null)
   const [isCameraReady, setIsCameraReady] = useState(false);
 
   async function getDistritos() {
@@ -135,11 +135,14 @@ export default function BlockerDataForm(props) {
       console.log("sgdfgaaaa")
 
       try {
-        const photo = await cameraRef.current.takePictureAsync(options);
-        setPreviewVisible(true)
-        setCapturedImage(photo)
-        setPhotoRoot(photo.uri);
-        console.log(photo.uri)
+        if (cameraRef) {
+          const photo = await cameraRef.current.takePictureAsync(options);
+          setPreviewVisible(true)
+          setCapturedImage(photo)
+          setPhotoRoot(photo.uri);
+          console.log(photo.uri)
+        }
+
       } catch (err) {
         console.log(err)
       }
@@ -204,7 +207,7 @@ export default function BlockerDataForm(props) {
       }}
     >
       <Header />
-      <ScrollView
+      <View
         style={{
           paddingBottom: 15,
         }}
@@ -223,11 +226,9 @@ export default function BlockerDataForm(props) {
               <CameraPreview photo={capturedImage} />
             ) : (
               <Camera
-                style={{ flex: 1, width: "100%" }}
-                ref={cameraRef}
-                onCameraReady={onCameraReady}
+                style={{ flex: 1, elevation: 3 }}
+                ref={(camera) => (cameraRef.current = camera)}
                 type={Camera.Constants.Type.front}
-                ratio={'1:1'}
               >
                 <View
                   style={{
@@ -273,7 +274,12 @@ export default function BlockerDataForm(props) {
 
 
             {startCamera ? (<>
-
+              <Camera
+                style={{ flex: 1, elevation: 3 }}
+                ref={(camera) => (cameraRef.current = camera)}
+                type={Camera.Constants.Type.front}
+              >
+              </Camera>
               <View
                 style={{
                   position: 'absolute',
@@ -343,7 +349,7 @@ export default function BlockerDataForm(props) {
             navigation={props.navigation}
           />
         )}
-      </ScrollView>
+      </View>
     </View>
   );
 }
