@@ -13,6 +13,8 @@ import * as ImagePicker from "expo-image-picker";
 export default function UploadImage(props) {
   const { photoUri } = props;
   const [image, setImage] = useState(null);
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
+
 
   useEffect(() => {
     (async () => {
@@ -28,15 +30,20 @@ export default function UploadImage(props) {
   }, []);
 
   const addImage = async () => {
-    let _image = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!_image.cancelled) {
-      setImage(_image.uri);
+    console.log(status)
+    if (!status.granted) {
+      requestPermission();
+    }
+    if (status.granted) {
+      let _image = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      })
+      if (!_image.cancelled) {
+        setImage(_image.uri);
+      }
     }
   };
 
