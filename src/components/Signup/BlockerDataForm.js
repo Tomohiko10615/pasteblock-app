@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
+  ScrollView,
   View,
   Text,
   ActivityIndicator,
@@ -25,12 +26,12 @@ export default function BlockerDataForm(props) {
   const [photo, setPhoto] = useState(true);
   const [distritos, setDistritos] = useState({});
   const [loading, setLoading] = useState(false);
-  const [startCamera, setStartCamera] = useState(false)
-  const [previewVisible, setPreviewVisible] = useState(false)
-  const [capturedImage, setCapturedImage] = useState(null)
-  const cameraRef = useRef(null)
-  const [isCameraReady, setIsCameraReady] = useState(false);
-  const [ratio, setRatio] = useState(null)
+  //const [startCamera, setStartCamera] = useState(false)
+  //const [previewVisible, setPreviewVisible] = useState(false)
+  //const [capturedImage, setCapturedImage] = useState(null)
+  //const cameraRef = useRef(null)
+  //const [isCameraReady, setIsCameraReady] = useState(false);
+  //const [ratio, setRatio] = useState(null)
 
   async function getDistritos() {
     try {
@@ -62,7 +63,7 @@ export default function BlockerDataForm(props) {
     })();
   }, []);*/
 
-  const __startCamera = async () => {
+  /*const __startCamera = async () => {
     /*try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -83,7 +84,7 @@ export default function BlockerDataForm(props) {
       }
     } catch (err) {
       console.warn(err);
-    }*/
+    }
 
     setRatio(await cameraRef.current.getSupportedRatiosAsync())
     console.log(ratio)
@@ -107,9 +108,9 @@ export default function BlockerDataForm(props) {
     }
 
 
-  }
+  }*/
 
-  const CameraPreview = (photo) => {
+  /*const CameraPreview = (photo) => {
     console.log('sdsfds', photo)
     return (
       <View
@@ -132,13 +133,13 @@ export default function BlockerDataForm(props) {
 
   const onCameraReady = () => {
     setIsCameraReady(true);
-  };
+  };*/
 
   const handler = (root) => {
     setPhotoRoot(root);
   };
 
-  const __takePicture = async () => {
+  /*const __takePicture = async () => {
     let cameraPermission = await Camera.getCameraPermissionsAsync();
     console.log(isCameraReady)
     if (cameraPermission.granted && isCameraReady) {
@@ -162,7 +163,7 @@ export default function BlockerDataForm(props) {
     } else {
       return;
     }
-  }
+  }*/
 
   const formik = useFormik({
     initialValues: {
@@ -211,126 +212,57 @@ export default function BlockerDataForm(props) {
       }
     },
   });
+
   return (
     <SafeAreaView
       style={{
         backgroundColor: "blue",
         height: "100%",
+
       }}
     >
       <Header />
-      <View
+      <ScrollView
         style={{
           paddingBottom: 15,
+          flex: 1
         }}
       >
         <Text style={styles.title}>Registro</Text>
-        {photo ? (
-          <Fragment>
-            {!startCamera && (
-              <UploadImage someHandlerProp={handler} />)}
-            <View style={styles.spinner}>
-              {loading && <ActivityIndicator size="large" color="white" />}
-            </View>
-
-
-            {previewVisible && capturedImage && (
-              <CameraPreview photo={capturedImage} />
-            )}
-
-
-            {startCamera ? (<>
-              <Camera
-                style={{ height: 300 }}
-                ref={cameraRef}
-                type={Camera.Constants.Type.front}
-                ratio={ratio}
-                onCameraReady={onCameraReady}
-              >
-
-                <View
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    flexDirection: 'row',
-                    flex: 1,
-                    width: '100%',
-                    padding: 20,
-                    justifyContent: 'space-between',
-                    marginBottom: 15
-                  }}
-                >
-                  <View
-                    style={{
-                      alignSelf: 'center',
-                      flex: 1,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => { __takePicture() }}
-                      style={{
-                        width: 70,
-                        height: 70,
-                        bottom: 0,
-                        borderRadius: 50,
-                        backgroundColor: '#fff'
-                      }}
-                    />
-                  </View>
-                </View>
-              </Camera>
-
-            </>) : (<><TouchableOpacity
-              onPress={__startCamera}
-              style={{
-                width: 130,
-                borderRadius: 4,
-                backgroundColor: '#14274e',
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignSelf: 'center',
-                height: 40,
-                marginBottom: 30
-              }}
-            >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  textAlign: 'center'
-                }}
-              >
-                Usar la cámara
-              </Text>
-            </TouchableOpacity></>)}
-
-            <View
-              style={{
-                alignSelf: 'center',
-                marginTop: 50
-              }}
-            >
-              <Button
-                title="Enviar foto"
-                onPress={formik.handleSubmit}
-                backgroundColor="white"
-                textColor="blue"
-              />
-            </View>
-
-          </Fragment>
-        ) : (
+        {photo ? (<Fragment>
+          <UploadImage someHandlerProp={handler} />
+          <View style={styles.spinner}>
+            {loading && <ActivityIndicator size="large" color="white" />}
+          </View>
+          <View
+            style={{
+              alignSelf: 'center',
+              marginTop: 50
+            }}
+          >
+            <Button
+              title="Enviar foto"
+              onPress={formik.handleSubmit}
+              backgroundColor="white"
+              textColor="blue"
+            />
+          </View>
+        </Fragment>) : (
           <BlockerProfile
             blockerId={reg}
             distritos={distritos}
             navigation={props.navigation}
-          />
-        )}
-      </View>
+          />)
+        }
+
+
+
+
+      </ScrollView>
     </SafeAreaView >
   );
 }
+
 
 function validationSchema() {
   return {};
