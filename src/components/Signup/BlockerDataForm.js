@@ -49,7 +49,7 @@ export default function BlockerDataForm(props) {
     })();
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     (async () => {
       let cameraPermission = await Camera.getCameraPermissionsAsync();
       if (!cameraPermission.granted) {
@@ -61,7 +61,7 @@ export default function BlockerDataForm(props) {
         }
       }
     })();
-  }, []);*/
+  }, []);
 
   /*const __startCamera = async () => {
     /*try {
@@ -254,10 +254,6 @@ export default function BlockerDataForm(props) {
             navigation={props.navigation}
           />)
         }
-
-
-
-
       </ScrollView>
     </SafeAreaView >
   );
