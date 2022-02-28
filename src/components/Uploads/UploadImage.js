@@ -61,7 +61,7 @@ export default function UploadImage(props) {
           <Text style={imageUploaderStyles.text}>
             {image ? "Seleccionar una foto diferente" : "Seleccionar foto desde la galería"}
           </Text>
-          <AntDesign name="camera" size={10} color="blue" />
+          <AntDesign name="camera" size={15} color="blue" />
         </TouchableOpacity>
       </View>
     </View>

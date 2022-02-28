@@ -21,8 +21,11 @@
     "expo": "~44.0.0",
     "expo-camera": "~12.1.2",
     "expo-checkbox": "~2.0.0",
+<<<<<<< HEAD
     "expo-cli": "^5.2.0",
     "expo-doctor": "^0.0.0",
+=======
+>>>>>>> 384874ce777d5b0962884387c849e1ec638e9a04
     "expo-image-picker": "^12.0.1",
     "expo-linking": "^3.0.0",
     "expo-notifications": "^0.14.0",
