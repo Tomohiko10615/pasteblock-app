@@ -3,7 +3,6 @@
 ## Screenshots
 
 | Login screen | Home screen     |
-| :-------- | :------- |
 | <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-login-screen.jpeg" width="300"> |  <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-home-screen.jpeg" width="300"> |
 | `401` | `Returns application/json` |
 
