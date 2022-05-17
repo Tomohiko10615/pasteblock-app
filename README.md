@@ -8,16 +8,16 @@
 
 ### Home screen
 
-![Home screen](https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-home-screen.jpeg)
+ <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-home-screen.jpeg" width="300">
 
 ### Profile screen
 
-![Profile screen](https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-profile-screen.jpeg)
+ <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-profile-screen.jpeg" width="300">
 
 ### Inbox screen
 
-![Inbox screen](https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-inbox-screen.jpeg)
+ <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-inbox-screen.jpeg" width="300">
 
 ### Services screen
 
-![Services screen](https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-services-screen.jpeg)
+ <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-services-screen.jpeg" width="300">
