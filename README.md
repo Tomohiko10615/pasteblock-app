@@ -4,7 +4,7 @@
 
 ### Login screen
 
- <img src="[https://your-image-url.type](https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-login-screen.jpeg)" width="100">
+ <img src="https://github.com/Tomohiko10615/pasteblock-app/raw/main/ba-login-screen.jpeg" width="100">
 
 ### Home screen
 
